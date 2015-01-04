@@ -62,3 +62,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+*.meta
+Assets/Standard Assets/
