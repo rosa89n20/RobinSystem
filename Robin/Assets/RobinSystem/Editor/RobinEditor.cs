@@ -22,9 +22,19 @@ public class RobinEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        //DrawDefaultInspector();
-        bodyObject = EditorGUILayout.ObjectField("Body",bodyObject,typeof(GameObject)) as GameObject;
-        EditorGUILayout.Vector3Field("Input",robin.inputDirection);
+        DrawDefaultInspector();
+        //Rect defaultPosition;
+        //GUIStyle boxStyle = new GUIStyle(GUI.skin.GetStyle("Box"));
+        //boxStyle.fontSize = 14;
+        //boxStyle.normal.textColor = Color.white;
+        //boxStyle.alignment = TextAnchor.MiddleCenter;
+
+        //EditorGUILayout.BeginVertical();
+        //EditorGUILayout.LabelField(new GUIContent("Character Setup"), boxStyle, GUILayout.ExpandWidth(true));
+
+        //bodyObject = EditorGUILayout.ObjectField("Body", bodyObject, typeof(GameObject)) as GameObject;
+        //EditorGUILayout.Vector3Field("Input", robin.inputDirection);
+        //EditorGUILayout.EndVertical();
     }
     #endregion
 

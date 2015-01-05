@@ -17,19 +17,19 @@ public class Robin : MonoBehaviour
     public UiBarManager playerManaBar;
 
     public CharacterSetup characterSetup;
-    [System.Serializable]
-    public struct CharacterSetup
-    {
-        public float healthPoint;
-        public float manaPoint;
-        public Animator animator;
-        public MovementInput movementInput;
-        public float rotateSpeed;
-        public bool isGrounded;
-        public float groundLength;
-        public float groundOffset;
-    }
-
+    //[System.Serializable]
+    //public struct CharacterSetup
+    //{
+    //    public float healthPoint;
+    //    public float manaPoint;
+    //    public Animator animator;
+    //    public MovementInput movementInput;
+    //    public float rotateSpeed;
+    //    public bool isGrounded;
+    //    public float groundLength;
+    //    public float groundOffset;
+    //}
+    
     public MouseSetup mouseSetup;
 
     [System.Serializable]

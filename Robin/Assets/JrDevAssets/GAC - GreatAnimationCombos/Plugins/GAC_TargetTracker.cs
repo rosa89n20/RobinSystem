@@ -121,7 +121,7 @@ public class GAC_TargetTracker : MonoBehaviour {
 	}
 
 	void Update(){
-        
+
 		foreach(GAC gacSettings in GAC.gacObjects){
 
 
@@ -305,7 +305,8 @@ public class GAC_TargetTracker : MonoBehaviour {
 			if(GAC.TargetHit(thisObject, gacSettings.gameObject)){
 				DamageMovement(gacSettings.gameObject, thisObject);
 				damageMovement = true;
-                //didHit = true;
+
+
 			}
 
 			StopDamageMovement(gacSettings.gameObject, thisObject);
@@ -316,7 +317,7 @@ public class GAC_TargetTracker : MonoBehaviour {
 
 		GAC_TargetTracker tracker = thisObject.GetComponent<GAC_TargetTracker>();
 
-		if(conType == GAC_TargetTracker.ControllerType.Legacy){
+		if(conType == GAC_TargetTracker.ControllerType.Mecanim){
 
 			//Check if animation use is toggled on
 			if(tracker.animToggle){
@@ -374,7 +375,7 @@ public class GAC_TargetTracker : MonoBehaviour {
 		if(!tracker.animToggle){
 
 			if(didHit){
-                
+
 				//Make sure movement is triggered
 				if(damageMovement){
 
@@ -383,7 +384,6 @@ public class GAC_TargetTracker : MonoBehaviour {
 
 						//Check if 3D Mode index selected
 						if(gameModeIndex == 0){
-                            if (moveToggle)
 							movementController.Move(Vector3.zero);
 							
 						}else if(gameModeIndex == 1){//Check if 2D Mode index selected
@@ -485,8 +485,7 @@ public class GAC_TargetTracker : MonoBehaviour {
 
 				if(playDamage){
 					//Play the new animation
-                    animationController.Play(damageAnim);
-                    
+					animatorController.Play(damageAnim);
 					playDamage = false;
 				}
 
@@ -678,11 +677,8 @@ public class GAC_TargetTracker : MonoBehaviour {
 				if(playDamage){
 					//Play the new animation
 					animatorController.Play(newDamage, newLayer, 0);
-                    //Debug.Log("Hit damage!!!");
 					playDamage = false;
 				}
-                //if (didHit)
-                //    didHit = false;
 
 				//Make sure move is toggled on
 				if(tracker.moveToggle){
