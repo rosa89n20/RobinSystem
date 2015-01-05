@@ -53,22 +53,13 @@
      <Compile Include="Assets\Plugins\HighlightingSystem\Scripts\Internal\HighlighterInternal.cs" />
      <Compile Include="Assets\Plugins\HighlightingSystem\Scripts\Internal\HighlightingBase.cs" />
      <Compile Include="Assets\Plugins\HighlightingSystem\Scripts\Internal\ShaderPropertyID.cs" />
-     <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
-     <Compile Include="Assets\Standard Assets\Water (Basic)\Sources\Scripts\WaterSimple.cs" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlur.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingTransparent.shader" />
-     <None Include="Assets\Topdown Kit\Shader\Transparent_Outline.shader" />
-     <None Include="Assets\Topdown Kit\Shader\MaskShader.shader" />
-     <None Include="Assets\Topdown Kit\Model\Model Character\Swordman\Swordman_Animation.txt" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingComposite.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
-     <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlit.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingOpaque.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingCut.shader" />
-     <None Include="Assets\Topdown Kit\Model\Model Enemy\Wolf\Wolf_Animation.txt" />
-     <None Include="Assets\Topdown Kit\Model\Model Character\Magician\Magician_Animation.txt" />
+     <None Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\History.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

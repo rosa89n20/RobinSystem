@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8728553c596314fc3aebc4cccbf7f7c1, type: 3}
+  m_Name: GAC_Images
+  m_EditorClassIdentifier: 
+  gacHeader: {fileID: 2800000, guid: b7c369bc3edef4b96a7e5146d07e8208, type: 3}
+  gacTrackerHeader: {fileID: 2800000, guid: 42e59d04e8292489cb1c015482cb1b9c, type: 3}
+  gacSeparator: {fileID: 2800000, guid: 116f750595c5b44d59243c685952c7bb, type: 3}
+  gacGreenSeparator: {fileID: 2800000, guid: 655ca06b3ee534ee99b315ff104c7aa5, type: 3}
+  gacAnimSetupNormal: {fileID: 2800000, guid: fad4ecbbdb0c34a3e8242142bd3a770e, type: 3}
+  gacAnimSetupSelected: {fileID: 2800000, guid: ae9d0e5960e6743cf9ecff2a79189ed6,
+    type: 3}
+  gacComboSetupNormal: {fileID: 2800000, guid: a855948e5202441daae0d8cd70322ffb, type: 3}
+  gacComboSetupSelected: {fileID: 2800000, guid: 58364127b94ec4fe1bbdf937be1d2cbc,
+    type: 3}
+  gacActivatorSetupNormal: {fileID: 2800000, guid: 3b8f4f46cb06f4650a87e1a884db9bb0,
+    type: 3}
+  gacActivatorSetupSelected: {fileID: 2800000, guid: ba032c12ada174a7dba58559eb8a8497,
+    type: 3}
+  gacAnimSetupQuick: {fileID: 2800000, guid: 3c54ca3c57b554ff79f0fd882b0b83bc, type: 3}
+  gacComboSetupQuick: {fileID: 2800000, guid: ee585872dfc274ed2a94440562e61435, type: 3}
+  gacActivatorSetupQuick: {fileID: 2800000, guid: 07c60ddc323454e8f90fc4185a2d2ae5,
+    type: 3}
+  gacWarning: {fileID: 2800000, guid: f58fbe0e5a9b8445283e31afbe562958, type: 3}
+  gacDropDown: {fileID: 2800000, guid: 2ef44fd1ee36f4678925a027ee79c38b, type: 3}
+  gacSave: {fileID: 2800000, guid: 3e2b7aa4b6b384f63b76da9ca0c1c762, type: 3}
+  gacRefresh: {fileID: 2800000, guid: 9a655fde4ae9e4ebc979424d38d23bfa, type: 3}
+  gacpacHeader: {fileID: 2800000, guid: 38a6d5a2ab1a74ffaaff4bbf7a0ad7d0, type: 3}
+  gacpacSeparator: {fileID: 2800000, guid: 116f750595c5b44d59243c685952c7bb, type: 3}
+  gacpacGreenSeparator: {fileID: 2800000, guid: 655ca06b3ee534ee99b315ff104c7aa5,
+    type: 3}
+  gacpacArrow: {fileID: 2800000, guid: cc2da40e2fd5b4d7a99ebd9a7d85da4e, type: 3}
+  gacpacGreenArrow: {fileID: 2800000, guid: 09d1156d543ed40049b724b39e14101c, type: 3}
+  gacpacInfo1: {fileID: 2800000, guid: b889fe7684fe4481f9281d6dee743d95, type: 3}
+  gacpacInfo2: {fileID: 2800000, guid: f3742ffe3a8d9483092557c85a0fd0fb, type: 3}
+  gacpacInfo3: {fileID: 2800000, guid: e147d8bea87464196a974fb69a570277, type: 3}
+  gacpacStartFont: {fileID: 12800000, guid: 1467539205ce54b44950bdd1e3102d61, type: 3}
+  gacpacAnimFont: {fileID: 12800000, guid: 111ec3e824add4130b38bf9c0746cabe, type: 3}
+  tagDefaultMove: {fileID: 2800000, guid: a49bc622f2fea4c1b9b2e6de5f50b0e6, type: 3}
+  tagSelectedMove: {fileID: 2800000, guid: f7b4b1717e3f9464d888789873c581fe, type: 3}
+  tagDragMove: {fileID: 2800000, guid: e138dab8c894341d4afd551268827ccf, type: 3}
+  tagHeader: {fileID: 2800000, guid: dd9eaa66bccac46d2a36d3112dd55f29, type: 3}
+  tagOff: {fileID: 2800000, guid: 3897c24ce2e844e239b5d02d0e5cb1b2, type: 3}
+  tagInfo: {fileID: 2800000, guid: 3d6770f724cdd43f79830cfd0a3f4fd6, type: 3}
+  tagTip: {fileID: 2800000, guid: d9fbbf1dfae2b447fa4411f77160bc83, type: 3}
+  windowGrid: {fileID: 2800000, guid: 25172ec28f66a4c76a4f90e3b2d5a24d, type: 3}

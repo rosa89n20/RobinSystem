@@ -1,0 +1,123 @@
+
+Changes/Fixes:
+
+Version 1.7
+-Added InControl support to use one input setup for multiple platforms, a copy of InControl is required
+-Added uScript support; use nodes to drive GAC's combo system
+-Added the option to only add objects to Target Tracker that are within set range
+-Added new gizmos to target tracker and made Hit detection more advanced (see documentation)
+-Added 2 new debugging options to log when objects are within hit range and when targets are added/removed to/from target tracker
+-Added 2 new API calls, AddTargetGO, RemoveTargetGO that basically adds/removes targets from specific GAC gameobjects
+-Added the ability to use a starter animation in it's own combos
+-Added the option to add a custom name to each combo
+-Added context value field modification to all fields (place cursor over context area and drag to modify field)
+-Added quick jump buttons to the Animations, Combos or Activators Setup menu accessable from each animation slot and combo slot
+-Added Move amount for all 3 axis to move the animation in any direction when animation is playing
+-Added Knockback axis values for animation slots that provide values to use to move the target that was hit which works with the new Target Tracker
+-Added Undo Support
+-Changed the Delay Countdown to be Min/Max slider for better control
+-Changed the max length to draw animation box for GACPAC 
+-Change Layout of Animation Setup for animation slots
+-Changed TargetHit() to require a gameobject that has called this function
+-Fixed a bug with Legacy animations component not updating when changes are made to it's clip list
+-Fixed Web Player build support for Gestures
+-Fixed the min/max sliders from giving a nan error bug that makes the slider disappear
+-Other small bugs and fixes
+
+Version 1.6.2
+-DFGUI-Activators bug fixes
+
+Version 1.6.1
+-Added the options when using button activators to choose between regular button or stick; the stick option provides 8 standard directions to choose from
+-Added color coding to activators to make them easier to distinguish
+-Changed layout of both Sync and Sequence Input Activators
+-Changed State option to be specific to each input in the sync/sequence activators
+-Fixed the missing input log items for some inputs
+-Fixed the inputs that dont flash green when triggered
+-Fixed Synchro and Sequence naming bugs
+-Fixed warning messages about Sync Inputs in use
+-Fixed bug with Sync and Sequence Inputs disappearing in Activator Menu after clicking "APPLY" button
+-Other small bugs and fixes
+
+Version 1.6
+-Folder organization changed! It is RECOMMENDED that you DELETE the JrDevAssets folder then import the new update
+-Added Touch Input Activators to the 'Activator Setup' Menu that allow the use of Touch Gestures with single or multi-touch
+(Included gestures are Up, UpLeft, UpRight, Left, Right, Down, DownLeft, DownRight, Tap, DoubleTap, Hold)
+-Added 'Touch Area GUI' which is the visual helper for Touch Inputs that shows the area you want to touch on screen to trigger animations
+-Added a new debugging option to log what inputs were used
+-Added a drop down to Select between using 2D and 3D; this is a major compatibilty support for Unity 2D Sprites which changes how 
+Mecanim is used for 2D games and what colliders are used
+-Added the ability to rearrange activator slots that have been set by using the Movement Dropdown; perfect for the obsessive compulsive ;)
+-Changed the Input Source dropdown from resetting when gameobject unselected
+-Changed the timing of Synchro and Sequence Activators for more smooth input success
+-Fixed the small delay of the GACPAC Window
+-Fixed a bug that allowed to add activator slots in the 'Activator Setup' Menu when there are no Activators set in the 'Animation Setup' Menu
+-Other small bugs and fixes
+
+Version 1.5.1
+-Added a "Combo Menu" option to the warning popup when trying deleting animations in use by combos; this improves productvity by jumping straight to menu if selected
+-Changed the way Mecanim states are used by GAC, states that have no clip attached are ignored from the GAC System.This change also works in tandem with the 
+following fix
+-Fixed animation slot when it becomes blank with the removal/null of an animation from the Animator or Animation component. This is resolved by deleting the 
+Animation spot which in turn deletes any combo setup spots and/or Starter Animation spots using that animation. Be careful when working with your animations
+-Other small bugs and fixes
+
+Version 1.5
+-Added Sequence-Activators to 'Activator Setup' that allow activating input in sequences to call a GAC animation for one off animations or combos 
+(E.G. Down->Forward->Down->A)
+-Added a visual cue to know what activator has been triggered - Activator slot turns green
+-Added support for DFGUI with Synchro and Sequence Activators
+-Fixed a bug for Synchro-Activators that allowed the activator with the least amount of input setups would override the activator with more inputs. These setups
+will have to have had some similar inputs being used(E.G. Synchro-Activator 1 is A+S and Synchro-Activator 2 is A+S+D. This setup should naturally have the 
+activator 2 override 1 but it works the opposite.
+
+Version 1.4.1 Hot Fix
+-Fixed a bug that disabled the use of Default Input State of all activators setups when using Synchro-Activators
+
+Version 1.4
+-Added Synchro-Activators to 'Activator Setup' to combine inputs from multiple sources to call a GAC animation for combos (E.G. A+S+D pressed simultaneously)
+-Added a new way GAC animation can be called, now you can use the new GAC.PlayAnimation(target, starter, activator) to play animation on a specific gameobject; 
+essentially allowing multiplayer gameplay setups!
+-Added Playmaker support; GAC now comes packed with Playmaker actions
+-Fixed the missing code for crossfading starter animations
+-Fixed gizmo from showing if 'Use Hit' is disabled
+
+
+Version 1.3.1 Hot Fix
+-Fixed bug with Crossfading. Now setting crossfading for an animation slot only affects this slot and not the animation before it in a combo
+
+Version 1.3
+-Added a new 'Delay Animation Combo' feature to create combos that link into animations when input event is delayed
+-Added an 'Activator' button for GACPAC that list the activators that are used to call this starter
+-Added access to some API calls: AddTarget(), RemoveTarget(), IsPlaying(), ArePlaying() and AnimationPlaying()
+-Added a dialog check when reducing the number activators to use as a precaution to prevent the removal of set combos and activator inputs
+-Changed the Animation Setup layout for better organization
+-Changed the '+' button to now only show on the last index when an animation is set in the 'Combo Setup Menu'; the new 'D' button for v1.3 is used to add a delayed animation
+-Changed if 'Use Hit' is not checked, all hit detection options are disabled
+-GAC-PAC now gives the activator number for an animation in a combo in bottom left of animation box. With the new Delay Combo feature, a 'D' is now marked on 
+bottom right of animation box for delayed animations
+-Fixed a GACPAC bug that doesnt change the animation box to green for the animation playing in the combo if Mecanim is being used
+-Fixed the gameObject from affecting itself if it has a layer with the same name the animation is supposed to affect
+-Fixed GACPAC issue where sometimes the animation box would go out of view based on the window size; now they properly move to the next line below now matter the size
+
+Version 1.2.1 Hot Fix
+-Fixed compiler errors when trying to build on the JrDevArts_Utilities script
+-Fixed major bug with Mecanim animations that froze the animation frame which prevented the use of other animations in combo
+-Changed how to affect objects with hit from player character; added few optimizations for smoother fps - Removed the use of FindObjectsOfType
+-JrDevArtsUtilities.cs moved to the Plugins folder, make sure to delete from Editor folder if still there
+
+Version 1.2
+-Added Mecanim Support. Choose between Legacy and Mecanim. Now just add animation states to the animator; no need to do transitions, 
+GAC will handle that through its inspector as normal
+-Added animation blending; now select between normal playing and crossfading animations
+-Fixed a major bug in which you can continue one combo into the sequence of another longer combo of that starter
+-Fixed minor bug that did not reset sequence 
+-Other small bugs and fixes
+
+Version 1.1
+-Added the new Activator Setup menu to allow setup of activators from the inspector which are called from different inputs events (Keyboard, mouse, controller, etc)
+-With the new Activator Setup menu comes support for the DFGUI assets for developers that use this GUI solution so they can setup guis with activators easily
+-Fixed a null bug that had GAC using animation slots that havent had an animation set to it yet
+-Fixed a GAC_PAC Window GUI errors
+-Cleaned up unnecessary code
+
