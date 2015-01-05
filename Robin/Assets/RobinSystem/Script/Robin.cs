@@ -6,80 +6,29 @@ using JrDevAssets;
 
 public class Robin : MonoBehaviour
 {
-    public GameObject body;
-
-    public enum MovementInput { Mouse, Keyboard };
-
-    public Vector3 inputDirection;
-    public enum State { Idle, Walk, Run }
+    public CharacterSetup character;
+    public CheckerSetup checker;
+    public AttackSetup attack;
+    public OutputSetup output;
 
     public UiBarManager playerHealthBar;
     public UiBarManager playerManaBar;
-
-    public CharacterSetup characterSetup;
-    //[System.Serializable]
-    //public struct CharacterSetup
-    //{
-    //    public float healthPoint;
-    //    public float manaPoint;
-    //    public Animator animator;
-    //    public MovementInput movementInput;
-    //    public float rotateSpeed;
-    //    public bool isGrounded;
-    //    public float groundLength;
-    //    public float groundOffset;
-    //}
-    
-    public MouseSetup mouseSetup;
-
-    [System.Serializable]
-    public struct MouseSetup
-    {
-        public Texture2D normal;
-        public Texture2D attack;
-        public float rayLength;
-        public LayerMask ground;
-        public Vector3 targetPosition;
-        public Vector3 pointPosition;
-        public Vector3 edgePosition;
-        public LayerMask environment;
-        public Color highlightColor;
-        public float highlightRayLength;
-        public float highlightOffset;
-    }
-
-    public AttackSetup attackSeutp;
-    [System.Serializable]
-    public struct AttackSetup
-    {
-        public float damage;
-        public GameObject enemy;
-        public GameObject lockOnEnemy;
-        public float attackRange;
-        public GAC attackModule;
-        public GameObject attackEffect;
-    }
-
-    public AnimationState animationState;
-    public enum AnimationState { Idle, Walk, Run, Attack, Dead }
-
-    public UiBarManager enemyHealthBar;
+    public UiBarManager hoverEnemyHealthBar;
 
     private NavMeshAgent _agent;
     private Highlighter _highlight;
     private AttachCamera _camera;
-
-    private float _maxHp;
-    private float _maxMana;
+    public float _maxHp;
+    public float _maxMana;
 
     void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
         _highlight = GetComponent<Highlighter>();
         _camera = Camera.main.GetComponent<AttachCamera>();
-        _maxHp = characterSetup.healthPoint;
-        _maxMana = characterSetup.manaPoint;
-        SetHealthBar(enemyHealthBar, false, Vector2.zero);
+        _maxHp = character.healthPoint;
+        _maxMana = character.manaPoint;
+        SetHealthBar(hoverEnemyHealthBar, false, Vector2.zero);
     }
 
     void Start()
@@ -98,6 +47,7 @@ public class Robin : MonoBehaviour
             Application.Quit();
         }
     }
+
     void FixedUpdate()
     {
 
@@ -112,8 +62,8 @@ public class Robin : MonoBehaviour
 
     void CharacterUI()
     {
-        SetHealthBar(playerHealthBar, true, new Vector2(characterSetup.healthPoint, _maxHp));
-        SetHealthBar(playerManaBar, true, new Vector2(characterSetup.manaPoint, _maxMana));
+        SetHealthBar(playerHealthBar, true, new Vector2(character.healthPoint, _maxHp));
+        SetHealthBar(playerManaBar, true, new Vector2(character.manaPoint, _maxMana));
     }
 
     private void SetHealthBar(UiBarManager ui, bool show, Vector2 value)
@@ -132,38 +82,38 @@ public class Robin : MonoBehaviour
 
     void GetHit(float damage)
     {
-        if (characterSetup.healthPoint - damage > 0)
-            characterSetup.healthPoint -= damage;
+        if (character.healthPoint - damage > 0)
+            character.healthPoint -= damage;
         else
-            characterSetup.healthPoint = 0;
-        //characterSetup.animator.Play("GetHit" + Random.Range(1, 3), 1);
-        characterSetup.animator.SetTrigger("GetHit");
+            character.healthPoint = 0;
+        //character.mecanim.Play("GetHit" + Random.Range(1, 3), 1);
+        character.mecanim.SetTrigger("GetHit");
     }
 
     void MouseAction()
     {
         Ray _mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] _hits = GetMouseHit(_mouseRay, mouseSetup.rayLength);
+        RaycastHit[] _hits = GetMouseHit(_mouseRay, checker.mouseRayLength);
         //Check all object on raycasthit
         for (int e = 0; e < _hits.Length; e++)
         {
             if (_hits[e].collider.gameObject.tag == "Enemy")
             {
-                Cursor.SetCursor(mouseSetup.attack, Vector2.zero, CursorMode.Auto);
-                attackSeutp.enemy = _hits[e].collider.gameObject;
-                attackSeutp.enemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
-                Vector2 _v = attackSeutp.enemy.GetComponent<Oracle>().GetHealthBar();
-                SetHealthBar(enemyHealthBar, true, _v);
+                GameManager.SetCursor(GameManager.MouseCursorType.Hover);
+                output.hoverEnemy = _hits[e].collider.gameObject;
+                output.hoverEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
+                Vector2 _v = output.hoverEnemy.GetComponent<Oracle>().GetHealthBar();
+                SetHealthBar(hoverEnemyHealthBar, true, _v);
                 break;
             }
             else
             {
-                Cursor.SetCursor(mouseSetup.normal, Vector2.zero, CursorMode.Auto);
-                if (attackSeutp.enemy != null)
+                GameManager.SetCursor(GameManager.MouseCursorType.Normal);
+                if (output.hoverEnemy != null)
                 {
-                    attackSeutp.enemy.SendMessage("Off", SendMessageOptions.DontRequireReceiver);
-                    attackSeutp.enemy = null;
-                    SetHealthBar(enemyHealthBar, false, Vector2.zero);
+                    output.hoverEnemy.SendMessage("Off", SendMessageOptions.DontRequireReceiver);
+                    output.hoverEnemy = null;
+                    SetHealthBar(hoverEnemyHealthBar, false, Vector2.zero);
                 }
             }
         }
@@ -176,112 +126,94 @@ public class Robin : MonoBehaviour
             {
                 if (_hits[i].collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
                 {
-                    mouseSetup.pointPosition = _hits[i].point;
-                    if (attackSeutp.lockOnEnemy != null)
-                        attackSeutp.lockOnEnemy = null;
+                    output.pointerPosition = _hits[i].point;
+                    if (output.lockOnEnemy != null)
+                        output.lockOnEnemy = null;
                     break;
                 }
             }
 
-            //If mouse currently point at enemy
-            if (attackSeutp.enemy != null)
+            //If mouse currently point at hoverEnemy
+            if (output.hoverEnemy != null)
             {
-                if (Vector3.Distance(transform.position, attackSeutp.enemy.transform.position) < attackSeutp.attackRange)
+                if (Vector3.Distance(transform.position, output.hoverEnemy.transform.position) < attack.attackRange)
                 {
-                    attackSeutp.attackModule.enabled = true;
+                    attack.GacSyatem.enabled = true;
                     _agent.Stop();
-                    transform.rotation = LookRotation(attackSeutp.enemy.transform.position, characterSetup.rotateSpeed);
+                    transform.rotation = LookRotation(output.hoverEnemy.transform.position, character.rotateSpeed);
                 }
                 else
                 {
-                    attackSeutp.lockOnEnemy = attackSeutp.enemy;
+                    output.lockOnEnemy = output.hoverEnemy;
                 }
             }
             else
             {
-                attackSeutp.attackModule.enabled = false;
-                if (!characterSetup.animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-                    if (Vector3.Distance(transform.position, mouseSetup.pointPosition) > 1f)
-                        _agent.destination = mouseSetup.pointPosition;
+                attack.GacSyatem.enabled = false;
+                if (!character.mecanim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+                    if (Vector3.Distance(transform.position, output.pointerPosition) > 1f)
+                        _agent.destination = output.pointerPosition;
             }
         }
 
         float _moveSpeed = Mathf.Max(Mathf.Abs(_agent.velocity.normalized.x), Mathf.Abs(_agent.velocity.normalized.z));
 
-        characterSetup.animator.SetFloat("MoveSpeed", _moveSpeed);
+        character.mecanim.SetFloat("MoveSpeed", _moveSpeed);
 
-        //if (Mathf.Abs(Input.GetAxis("Mouse ScrollWheel")) > 0)
-        //{
-        //    if (_camera.offset.y >= 4f && _camera.offset.y <= 11f)
-        //        _camera.offset.y += (Input.GetAxis("Mouse ScrollWheel") * 100f) * Time.deltaTime;
-        //    if (_camera.offset.z >= -4.5f && _camera.offset.z <= -8f)
-        //        _camera.offset.z += (Input.GetAxis("Mouse ScrollWheel") * -50f) * Time.deltaTime;
-        //}
-
-        Ray _topRay = new Ray(transform.position + new Vector3(0f, mouseSetup.highlightOffset, 0f), new Vector3(0, 1, -1));
-        Debug.DrawRay(_topRay.origin, _topRay.direction * mouseSetup.highlightRayLength, Color.red);
-        if (Physics.Raycast(_topRay, mouseSetup.highlightRayLength, mouseSetup.environment))
-            _highlight.On(mouseSetup.highlightColor);
+        Ray _topRay = new Ray(transform.position + new Vector3(0f, checker.highlightRayOffset, 0f), new Vector3(0, 1, -1));
+        Debug.DrawRay(_topRay.origin, _topRay.direction * checker.highlightRayLength, Color.red);
+        if (Physics.Raycast(_topRay, checker.highlightRayLength, checker.mouseRayIgnore))
+            _highlight.On(checker.highlightColor);
         else
             _highlight.Off();
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
             _agent.Stop();
-            transform.rotation = LookRotation(mouseSetup.pointPosition, characterSetup.rotateSpeed);
+            transform.rotation = LookRotation(output.pointerPosition, character.rotateSpeed);
         }
 
-        Debug.DrawRay(_mouseRay.origin, _mouseRay.direction * mouseSetup.rayLength, Color.magenta);
+        Debug.DrawRay(_mouseRay.origin, _mouseRay.direction * checker.mouseRayLength, Color.magenta);
 
-        if (attackSeutp.lockOnEnemy != null)
+        if (output.lockOnEnemy != null)
             LockOnEnemy();
-    }
-
-    void InputCheck()
-    {
-        //This's for keyboard control
-        if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0 || Mathf.Abs(Input.GetAxis("Vertical")) > 0)
-        {
-            inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        }
     }
 
     public void Attack()
     {
         GameObject target = null;
-        if (attackSeutp.lockOnEnemy != null)
-            target = attackSeutp.lockOnEnemy;
-        else if (attackSeutp.enemy != null)
-            target = attackSeutp.enemy;
-        if (attackSeutp.attackModule.enabled && target != null)
+        if (output.lockOnEnemy != null)
+            target = output.lockOnEnemy;
+        else if (output.hoverEnemy != null)
+            target = output.hoverEnemy;
+        if (attack.GacSyatem.enabled && target != null)
         {
-            transform.rotation = LookRotation(target.transform.position, characterSetup.rotateSpeed);
+            transform.rotation = LookRotation(target.transform.position, character.rotateSpeed);
             target.GetComponent<GAC_TargetTracker>().playDamage = true;
             target.GetComponent<GAC_TargetTracker>().DamageMovement(gameObject, target);
-            float _dmg = Mathf.RoundToInt(Random.Range(-attackSeutp.damage / 10, attackSeutp.damage / 10)) + attackSeutp.damage;
+            float _dmg = Mathf.RoundToInt(Random.Range(-attack.damage / 10, attack.damage / 10)) + attack.damage;
             target.SendMessage("GetHit", _dmg);
             GameManager.CreateDamageText(target, _dmg.ToString(), Color.white, new Vector3(Random.Range(-5, 6), 5, 0));
-            if (attackSeutp.attackEffect)
-                Instantiate(attackSeutp.attackEffect, transform.position, Quaternion.identity);
+            if (attack.attackEffect)
+                Instantiate(attack.attackEffect, transform.position, Quaternion.identity);
         }
-        if (attackSeutp.lockOnEnemy != null)
-            attackSeutp.lockOnEnemy = null;
+        if (output.lockOnEnemy != null)
+            output.lockOnEnemy = null;
     }
 
     void LockOnEnemy()
     {
-        //Debug.Log("LockOnEnemy");
-        if (attackSeutp.attackModule.enabled)
-            attackSeutp.attackModule.enabled = false;
-        _agent.destination = attackSeutp.lockOnEnemy.transform.position;
-        attackSeutp.lockOnEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
-        //Vector2 _v = attackSeutp.lockOnEnemy.GetComponent<Oracle>().GetHealthBar();
+        if (attack.GacSyatem.enabled)
+            attack.GacSyatem.enabled = false;
+        _agent.destination = output.lockOnEnemy.transform.position;
+        output.lockOnEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
+        //Vector2 _v = output.lockOnEnemy.GetComponent<Oracle>().GetHealthBar();
         //SetHealthBar(true, _v);
-        if (Vector3.Distance(transform.position, attackSeutp.lockOnEnemy.transform.position) < attackSeutp.attackRange)
+        if (Vector3.Distance(transform.position, output.lockOnEnemy.transform.position) < attack.attackRange)
         {
-            attackSeutp.attackModule.enabled = true;
+            attack.GacSyatem.enabled = true;
             _agent.Stop();
-            characterSetup.animator.Play("Combo1");
+            character.mecanim.Play("Combo1");
             return;
         }
     }
@@ -298,11 +230,11 @@ public class Robin : MonoBehaviour
     {
         //Mouse position
         Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
-        Gizmos.DrawSphere(mouseSetup.pointPosition, 0.25f);
-        Gizmos.DrawRay(transform.position + new Vector3(0, characterSetup.groundOffset, 0), transform.up * -characterSetup.groundLength);
+        //Gizmos.DrawSphere(checker.pointerPosition, 0.25f);
+        Gizmos.DrawRay(transform.position + new Vector3(0, checker.groundRayOffset, 0), transform.up * -checker.groundRayLength);
         //Attack range
         Gizmos.color = new Color(1f, 0f, 0f, 0.5f);
-        Gizmos.DrawSphere(transform.position, attackSeutp.attackRange);
+        Gizmos.DrawSphere(transform.position, attack.attackRange);
         //Front check
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, transform.forward * 10f);
@@ -310,9 +242,9 @@ public class Robin : MonoBehaviour
 
     private void GroundCheck()
     {
-        if (Physics.Raycast(transform.position + new Vector3(0, characterSetup.groundOffset, 0), -transform.up, characterSetup.groundLength, mouseSetup.ground))
-            characterSetup.isGrounded = true;
+        if (Physics.Raycast(transform.position + new Vector3(0, checker.groundRayOffset, 0), -transform.up, checker.groundRayLength, checker.ground))
+            output.isGrounded = true;
         else
-            characterSetup.isGrounded = false;
+            output.isGrounded = false;
     }
 }
