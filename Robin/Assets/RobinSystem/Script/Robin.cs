@@ -15,6 +15,9 @@ public class Robin : MonoBehaviour
     public UiBarManager playerManaBar;
     public UiBarManager hoverEnemyHealthBar;
 
+    public LayerMask groundLayer;
+    public LayerMask mouseRayIgnore;
+    
     private NavMeshAgent _agent;
     private Highlighter _highlight;
     private AttachCamera _camera;
@@ -26,6 +29,7 @@ public class Robin : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _highlight = GetComponent<Highlighter>();
         _camera = Camera.main.GetComponent<AttachCamera>();
+        character.mecanim = GetComponent<Animator>();
         _maxHp = character.healthPoint;
         _maxMana = character.manaPoint;
         SetHealthBar(hoverEnemyHealthBar, false, Vector2.zero);
@@ -228,16 +232,16 @@ public class Robin : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        //Mouse position
-        Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
-        //Gizmos.DrawSphere(checker.pointerPosition, 0.25f);
-        Gizmos.DrawRay(transform.position + new Vector3(0, checker.groundRayOffset, 0), transform.up * -checker.groundRayLength);
-        //Attack range
-        Gizmos.color = new Color(1f, 0f, 0f, 0.5f);
-        Gizmos.DrawSphere(transform.position, attack.attackRange);
-        //Front check
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, transform.forward * 10f);
+        ////Mouse position
+        //Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
+        ////Gizmos.DrawSphere(checker.pointerPosition, 0.25f);
+        //Gizmos.DrawRay(transform.position + new Vector3(0, checker.groundRayOffset, 0), transform.up * -checker.groundRayLength);
+        ////Attack range
+        //Gizmos.color = new Color(1f, 0f, 0f, 0.5f);
+        //Gizmos.DrawSphere(transform.position, attack.attackRange);
+        ////Front check
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawRay(transform.position, transform.forward * 10f);
     }
 
     private void GroundCheck()

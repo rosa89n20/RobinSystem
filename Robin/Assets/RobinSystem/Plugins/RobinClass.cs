@@ -26,6 +26,7 @@ public class CheckerSetup
 public class AttackSetup
 {
     public float attackRange;
+    public float attackAngle;
     public float damage;
     public MonoBehaviour GacSyatem;
     public GameObject attackEffect;
