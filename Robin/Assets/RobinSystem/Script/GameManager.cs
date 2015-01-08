@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     public GameObject damageText;
     static GameObject _damageText;
 
-    public enum MouseCursorType {Normal,Hover}
+    
     public Texture2D normal;
     public Texture2D hover;
 
@@ -30,22 +30,5 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void SetCursor(MouseCursorType type)
-    {
-        Texture2D image;
-        switch(type)
-        {
-            case MouseCursorType.Normal:
-                image = _normalCursor;
-                break;
-            case MouseCursorType.Hover:
-                image = _hoverCursor;
-                break;
-            default:
-                image = _normalCursor;
-                break;
-        }
-
-        Cursor.SetCursor(image, Vector2.zero, CursorMode.Auto);
-    }
+    
 }

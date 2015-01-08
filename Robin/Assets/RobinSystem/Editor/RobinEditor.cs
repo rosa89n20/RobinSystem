@@ -19,6 +19,7 @@ public class RobinEditor : Editor
     private Rect beginPosition;
     private SerializedProperty groundLayer;
     private SerializedProperty mouseRayIgnore;
+    private SerializedProperty rotateSpeed;
     #endregion
 
     #region Main Function
@@ -29,6 +30,7 @@ public class RobinEditor : Editor
 
         groundLayer = serializedObject.FindProperty("groundLayer");
         mouseRayIgnore = serializedObject.FindProperty("mouseRayIgnore");
+        rotateSpeed = serializedObject.FindProperty("_maxHp");
     }
 
     public override void OnInspectorGUI()
@@ -124,7 +126,7 @@ public class RobinEditor : Editor
     private void ShowProgressBar(float current, float max, string text)
     {
         //float scale=current/max;
-        beginPosition = GUILayoutUtility.GetRect(EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+        beginPosition = GUILayoutUtility.GetRect(EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight, GUI.skin.box, GUILayout.ExpandWidth(true));
         //GUI.Box(beginPosition,"");
         //GUI.Box(new Rect(beginPosition.x,beginPosition.y,beginPosition.width*scale,beginPosition.height),"");
         //GUI.Label(beginPosition, text + " : " + current + " / " + max);
@@ -133,7 +135,7 @@ public class RobinEditor : Editor
     private void ShowBlock(string title, int lineUnit)
     {
         int line = lineUnit + 1;
-        beginPosition = GUILayoutUtility.GetRect(EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight * line + 4f, GUI.skin.box, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(false));
+        beginPosition = GUILayoutUtility.GetRect(EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight * line + 4f, GUI.skin.box, GUILayout.ExpandWidth(true));
         GUI.Box(new Rect(beginPosition.x, beginPosition.y, beginPosition.width, EditorGUIUtility.singleLineHeight * line + 4f), "", GUI.skin.box);
         GUI.Label(new Rect(beginPosition.x + 2f, beginPosition.y + 2f, beginPosition.width, beginPosition.height), title);
     }
