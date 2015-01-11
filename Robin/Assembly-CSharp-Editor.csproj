@@ -46,13 +46,12 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Editor\PropertyEditor.cs" />
-     <Compile Include="Assets\Editor\ThirdPersonCameraEditor.cs" />
-     <Compile Include="Assets\Editor\ThirdPersonControllerEditor.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Editor\GAC_Editor.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Editor\GAC_PAC.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Editor\GAC_TAG.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Editor\GAC_Tracker_Editor.cs" />
+     <Compile Include="Assets\RobinSystem\Editor\BuiltInResourcesWindow.cs" />
+     <Compile Include="Assets\RobinSystem\Editor\MouseModule.cs" />
      <Compile Include="Assets\RobinSystem\Editor\RobinEditor.cs" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlur.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingTransparent.shader" />

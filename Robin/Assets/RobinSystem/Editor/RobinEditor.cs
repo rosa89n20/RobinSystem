@@ -4,126 +4,127 @@ using UnityEditorInternal;
 using System.Collections;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(Robin))]
-public class RobinEditor : Editor
+//[CustomEditor(typeof(Robin))]
+public abstract class RobinEditor : Editor
 {
     #region Public Variables
-    public Robin robin;
-    public GameObject bodyObject;
-    public MenuState menuState;
-    public enum MenuState { Character, Checker, Attack, Output };
-    public float area = 5f;
+    //public Robin robin;
+    //public GameObject bodyObject;
+    //public MenuState menuState;
+    //public enum MenuState { Character, Checker, Attack, Output };
+    //public float area = 5f;
     #endregion
 
     #region Private Variables
-    private Rect beginPosition;
-    private SerializedProperty groundLayer;
-    private SerializedProperty mouseRayIgnore;
-    private SerializedProperty rotateSpeed;
+    //private Rect beginPosition;
+    private static Rect beginPosition;
+    //private SerializedProperty groundLayer;
+    //private SerializedProperty mouseRayIgnore;
+    //private SerializedProperty rotateSpeed;
     #endregion
 
     #region Main Function
-    void OnEnable()
-    {
-        robin = (Robin)target;
-        menuState = MenuState.Character;
+    //void OnEnable()
+    //{
+    //robin = (Robin)target;
+    //menuState = MenuState.Character;
 
-        groundLayer = serializedObject.FindProperty("groundLayer");
-        mouseRayIgnore = serializedObject.FindProperty("mouseRayIgnore");
-        rotateSpeed = serializedObject.FindProperty("_maxHp");
-    }
+    //groundLayer = serializedObject.FindProperty("groundLayer");
+    //mouseRayIgnore = serializedObject.FindProperty("mouseRayIgnore");
+    //rotateSpeed = serializedObject.FindProperty("_maxHp");
+    //}
 
-    public override void OnInspectorGUI()
-    {
-        GUIStyle titleStyle = new GUIStyle(GUI.skin.box);
-        titleStyle.stretchWidth = true;
-        titleStyle.normal.textColor = Color.white;
+    //public override void OnInspectorGUI()
+    //{
+    //GUIStyle titleStyle = new GUIStyle(GUI.skin.box);
+    //titleStyle.stretchWidth = true;
+    //titleStyle.normal.textColor = Color.white;
 
-        //GUI.skin = Resources.Load("RobinEditorSkin", typeof(GUISkin)) as GUISkin;
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Character"))
-            menuState = MenuState.Character;
-        if (GUILayout.Button("Checker"))
-            menuState = MenuState.Checker;
-        if (GUILayout.Button("Attack"))
-            menuState = MenuState.Attack;
-        if (GUILayout.Button("Output"))
-            menuState = MenuState.Output;
-        EditorGUILayout.EndHorizontal();
+    ////GUI.skin = Resources.Load("RobinEditorSkin", typeof(GUISkin)) as GUISkin;
+    //EditorGUILayout.BeginHorizontal();
+    //if (GUILayout.Button("Character"))
+    //    menuState = MenuState.Character;
+    //if (GUILayout.Button("Checker"))
+    //    menuState = MenuState.Checker;
+    //if (GUILayout.Button("Attack"))
+    //    menuState = MenuState.Attack;
+    //if (GUILayout.Button("Output"))
+    //    menuState = MenuState.Output;
+    //EditorGUILayout.EndHorizontal();
 
-        if (menuState == MenuState.Character)
-        {
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Character Setup", titleStyle);
-            ShowProgressBar(robin.character.healthPoint, robin._maxHp, "Health");
-            ShowProgressBar(robin.character.manaPoint, robin._maxMana, "Mana");
-            robin.character.rotateSpeed = EditorGUILayout.FloatField("Rotate Speed", robin.character.rotateSpeed);
-            EditorGUILayout.EndVertical();
-        }
-        else if (menuState == MenuState.Checker)
-        {
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Checker Setup", titleStyle);
-            ShowBlock("Ground Checker", 3);
-            EditorGUI.PropertyField(BlockContent(1), groundLayer, new GUIContent("Ground Layer"));
-            robin.checker.groundRayLength = EditorGUI.FloatField(BlockContent(2), "Ray Length", robin.checker.groundRayLength);
-            robin.checker.groundRayOffset = EditorGUI.FloatField(BlockContent(3), "Ray Offset", robin.checker.groundRayOffset);
-            ShowBlock("Mouse Checker", 2);
-            EditorGUI.PropertyField(BlockContent(1), mouseRayIgnore, new GUIContent("Ignore Layer"));
-            robin.checker.mouseRayLength = EditorGUI.FloatField(BlockContent(2), "Ray Length", robin.checker.mouseRayLength);
-            ShowBlock("Highlight System", 4);
-            robin.checker.useHighlightingSystem = EditorGUI.Toggle(BlockContent(1), "Use it?", robin.checker.useHighlightingSystem);
-            robin.checker.highlightColor = EditorGUI.ColorField(BlockContent(2), "Color", robin.checker.highlightColor);
-            robin.checker.highlightRayLength = EditorGUI.FloatField(BlockContent(3), "Ray Length", robin.checker.highlightRayLength);
-            robin.checker.highlightRayOffset = EditorGUI.FloatField(BlockContent(4), "Ray Offset", robin.checker.highlightRayOffset);
-            EditorGUILayout.EndVertical();
-        }
-        else if (menuState == MenuState.Attack)
-        {
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Attack Setup", titleStyle);
-            robin.attack.attackRange = EditorGUILayout.FloatField( "Range", robin.attack.attackRange);
-            robin.attack.attackAngle = EditorGUILayout.FloatField( "Angle", robin.attack.attackAngle);
-            if (GUI.changed)
-                EditorUtility.SetDirty(robin);
-            EditorGUILayout.EndVertical();
-        }
-        else if (menuState == MenuState.Output)
-        {
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Output Stream", titleStyle);
-            robin.output.pointerPosition = EditorGUILayout.Vector3Field("Pointer Position", robin.output.pointerPosition);
-            robin.output.isGrounded = EditorGUILayout.Toggle("Is Grounded?",robin.output.isGrounded);
-            robin.output.hoverEnemy = EditorGUILayout.ObjectField("On Hover Enemy",robin.output.hoverEnemy,typeof(GameObject),false) as GameObject;
-            EditorGUILayout.EndVertical();
-        }
+    //if (menuState == MenuState.Character)
+    //{
+    //    EditorGUILayout.BeginVertical();
+    //    EditorGUILayout.LabelField("Character Setup", titleStyle);
+    //    ShowProgressBar(robin.character.healthPoint, robin._maxHp, "Health");
+    //    ShowProgressBar(robin.character.manaPoint, robin._maxMana, "Mana");
+    //    robin.character.rotateSpeed = EditorGUILayout.FloatField("Rotate Speed", robin.character.rotateSpeed);
+    //    EditorGUILayout.EndVertical();
+    //}
+    //else if (menuState == MenuState.Checker)
+    //{
+    //    EditorGUILayout.BeginVertical();
+    //    EditorGUILayout.LabelField("Checker Setup", titleStyle);
+    //    ShowBlock("Ground Checker", 3);
+    //    EditorGUI.PropertyField(BlockContent(1), groundLayer, new GUIContent("Ground Layer"));
+    //    robin.checker.groundRayLength = EditorGUI.FloatField(BlockContent(2), "Ray Length", robin.checker.groundRayLength);
+    //    robin.checker.groundRayOffset = EditorGUI.FloatField(BlockContent(3), "Ray Offset", robin.checker.groundRayOffset);
+    //    ShowBlock("Mouse Checker", 2);
+    //    EditorGUI.PropertyField(BlockContent(1), mouseRayIgnore, new GUIContent("Ignore Layer"));
+    //    robin.checker.mouseRayLength = EditorGUI.FloatField(BlockContent(2), "Ray Length", robin.checker.mouseRayLength);
+    //    ShowBlock("Highlight System", 4);
+    //    robin.checker.useHighlightingSystem = EditorGUI.Toggle(BlockContent(1), "Use it?", robin.checker.useHighlightingSystem);
+    //    robin.checker.highlightColor = EditorGUI.ColorField(BlockContent(2), "Color", robin.checker.highlightColor);
+    //    robin.checker.highlightRayLength = EditorGUI.FloatField(BlockContent(3), "Ray Length", robin.checker.highlightRayLength);
+    //    robin.checker.highlightRayOffset = EditorGUI.FloatField(BlockContent(4), "Ray Offset", robin.checker.highlightRayOffset);
+    //    EditorGUILayout.EndVertical();
+    //}
+    //else if (menuState == MenuState.Attack)
+    //{
+    //    EditorGUILayout.BeginVertical();
+    //    EditorGUILayout.LabelField("Attack Setup", titleStyle);
+    //    robin.attack.attackRange = EditorGUILayout.FloatField( "Range", robin.attack.attackRange);
+    //    robin.attack.attackAngle = EditorGUILayout.FloatField( "Angle", robin.attack.attackAngle);
+    //    if (GUI.changed)
+    //        EditorUtility.SetDirty(robin);
+    //    EditorGUILayout.EndVertical();
+    //}
+    //else if (menuState == MenuState.Output)
+    //{
+    //    EditorGUILayout.BeginVertical();
+    //    EditorGUILayout.LabelField("Output Stream", titleStyle);
+    //    robin.output.pointerPosition = EditorGUILayout.Vector3Field("Pointer Position", robin.output.pointerPosition);
+    //    robin.output.isGrounded = EditorGUILayout.Toggle("Is Grounded?",robin.output.isGrounded);
+    //    robin.output.hoverEnemy = EditorGUILayout.ObjectField("On Hover Enemy",robin.output.hoverEnemy,typeof(GameObject),false) as GameObject;
+    //    EditorGUILayout.EndVertical();
+    //}
 
-        GUILayout.Space(50);
-        DrawDefaultInspector();
-    }
+    //GUILayout.Space(50);
+    //DrawDefaultInspector();
+    //}
 
-    public void OnSceneGUI()
-    {
-        Handles.color = new Color(1, 0, 0, 0.2f);
-        Handles.DrawSolidArc(robin.transform.position, robin.transform.up, robin.transform.forward, robin.attack.attackAngle * 0.5f, robin.attack.attackRange);
-        Handles.DrawSolidArc(robin.transform.position, robin.transform.up, robin.transform.forward, -robin.attack.attackAngle * 0.5f, robin.attack.attackRange);
-        if (robin.output.isGrounded)
-            Handles.color = new Color(0, 1, 0, 0.2f);
-        else
-            Handles.color = new Color(1, 0, 0, 0.2f);
-        Handles.DrawSolidDisc(robin.transform.position + new Vector3(0, robin.checker.groundRayOffset, 0), robin.transform.up, Mathf.Max(robin.transform.lossyScale.x, robin.transform.lossyScale.z) * 2);
-        if (robin.output.isGrounded)
-            Handles.color = Color.green;
-        else
-            Handles.color = Color.red;
-        //Handles.DrawLine(robin.transform.position + new Vector3(0, robin.checker.groundRayOffset, 0), robin.transform.position + new Vector3(0, robin.checker.groundRayOffset-robin.transform.lossyScale.y, 0));
-        Handles.DrawWireDisc(robin.transform.position + new Vector3(0, robin.checker.groundRayOffset, 0), robin.transform.up, Mathf.Max(robin.transform.lossyScale.x, robin.transform.lossyScale.z) * 2);
-        Handles.color = Color.white;
-    }
+    //public void OnSceneGUI()
+    //{
+    //Handles.color = new Color(1, 0, 0, 0.2f);
+    //Handles.DrawSolidArc(robin.transform.position, robin.transform.up, robin.transform.forward, robin.attack.attackAngle * 0.5f, robin.attack.attackRange);
+    //Handles.DrawSolidArc(robin.transform.position, robin.transform.up, robin.transform.forward, -robin.attack.attackAngle * 0.5f, robin.attack.attackRange);
+    //if (robin.output.isGrounded)
+    //    Handles.color = new Color(0, 1, 0, 0.2f);
+    //else
+    //    Handles.color = new Color(1, 0, 0, 0.2f);
+    //Handles.DrawSolidDisc(robin.transform.position + new Vector3(0, robin.checker.groundRayOffset, 0), robin.transform.up, Mathf.Max(robin.transform.lossyScale.x, robin.transform.lossyScale.z) * 2);
+    //if (robin.output.isGrounded)
+    //    Handles.color = Color.green;
+    //else
+    //    Handles.color = Color.red;
+    ////Handles.DrawLine(robin.transform.position + new Vector3(0, robin.checker.groundRayOffset, 0), robin.transform.position + new Vector3(0, robin.checker.groundRayOffset-robin.transform.lossyScale.y, 0));
+    //Handles.DrawWireDisc(robin.transform.position + new Vector3(0, robin.checker.groundRayOffset, 0), robin.transform.up, Mathf.Max(robin.transform.lossyScale.x, robin.transform.lossyScale.z) * 2);
+    //Handles.color = Color.white;
+    //}
     #endregion
 
     #region Utility Function
-    private void ShowProgressBar(float current, float max, string text)
+    public static void ShowProgressBar(float current, float max, string text)
     {
         //float scale=current/max;
         beginPosition = GUILayoutUtility.GetRect(EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight, GUI.skin.box, GUILayout.ExpandWidth(true));
@@ -132,18 +133,386 @@ public class RobinEditor : Editor
         //GUI.Label(beginPosition, text + " : " + current + " / " + max);
         EditorGUI.ProgressBar(beginPosition, current / max, text + " : " + current + " / " + max);
     }
-    private void ShowBlock(string title, int lineUnit)
+
+    public static void ShowBlock(string title, int lineUnit)
     {
         int line = lineUnit + 1;
-        beginPosition = GUILayoutUtility.GetRect(EditorGUIUtility.fieldWidth, EditorGUIUtility.singleLineHeight * line + 4f, GUI.skin.box, GUILayout.ExpandWidth(true));
-        GUI.Box(new Rect(beginPosition.x, beginPosition.y, beginPosition.width, EditorGUIUtility.singleLineHeight * line + 4f), "", GUI.skin.box);
-        GUI.Label(new Rect(beginPosition.x + 2f, beginPosition.y + 2f, beginPosition.width, beginPosition.height), title);
+        beginPosition = GUILayoutUtility.GetRect(EditorGUIUtility.fieldWidth, (EditorGUIUtility.singleLineHeight * line + 5f) + (lineUnit * 2f), EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
+        GUI.Box(new Rect(beginPosition.x, beginPosition.y, beginPosition.width, (EditorGUIUtility.singleLineHeight * line + 5f) + (lineUnit * 2f)), "", GUI.skin.box);
+        GUI.Label(new Rect(beginPosition.x + 2f, beginPosition.y + 2f, beginPosition.width, beginPosition.height), title, EditorStyles.boldLabel);
     }
-    private Rect BlockContent(int lineUnit)
+
+    public static Rect BlockContent(int lineUnit)
     {
         float paddingLeft = 12f;
         float paddingRight = 14f;
-        return new Rect(beginPosition.x + paddingLeft, beginPosition.y + EditorGUIUtility.singleLineHeight * lineUnit + 2f, beginPosition.width - paddingRight, EditorGUIUtility.singleLineHeight);
+        return new Rect(beginPosition.x + paddingLeft, beginPosition.y + (EditorGUIUtility.singleLineHeight * lineUnit + 2f) + (lineUnit * 2f), beginPosition.width - paddingRight, EditorGUIUtility.singleLineHeight);
+    }
+
+    public static void BlockPropertyField(string label, int lineUnit, SerializedProperty property)
+    {
+        EditorGUI.PropertyField(BlockContent(lineUnit), property, new GUIContent(label));
+    }
+
+    public static void BlockTagField(string label, int lineUnit, SerializedProperty property)
+    {
+        property.stringValue = EditorGUI.TagField(BlockContent(lineUnit), label, property.stringValue);
+    }
+
+    #endregion
+
+    #region 3-part
+    protected SerializedObject serializedObject;
+
+
+    private static GUIStyle commentStyle = null;
+    private static bool cameraRendered = false;
+
+
+    // General //
+
+
+    protected abstract void Initialize();
+
+
+    public void BeginEdit()
+    {
+        if (serializedObject != null && serializedObject.targetObject == target)
+        {
+            serializedObject.Update();
+            return;
+        }
+
+        serializedObject = new SerializedObject(target);
+
+        Initialize();
+    }
+
+
+    public void EndEdit()
+    {
+        serializedObject.ApplyModifiedProperties();
+    }
+
+
+    // Inspector GUI //
+
+
+    public static GUIStyle CommentStyle
+    {
+        get
+        {
+            if (commentStyle == null)
+            {
+                commentStyle = new GUIStyle(GUI.skin.GetStyle("Box"));
+                commentStyle.font = EditorStyles.miniFont;
+                commentStyle.alignment = TextAnchor.UpperLeft;
+            }
+
+            return commentStyle;
+        }
+    }
+
+    protected void ArrayProperty(string label, string name, SerializedObject target)
+    {
+        int size = target.FindProperty(name + ".Array.size").intValue;
+        if (size > 0)
+        {
+            //int newSize = EditorGUILayout.IntField(label , size);
+
+            //if (newSize != size)
+            //    target.FindProperty(name + ".Array.size").intValue = newSize;
+
+            ShowBlock(label, size);
+
+            //EditorGUI.indentLevel = 1;
+
+            for (int i = 0; i < size; i++)
+            {
+                var prop = target.FindProperty(string.Format("{0}.Array.data[{1}]", name, i));
+                EditorGUI.PropertyField(BlockContent(i + 1), prop);
+                //EditorGUILayout.PropertyField(prop);
+            }
+            //EditorGUI.indentLevel = 0;
+        }
+        else
+        {
+            ShowBlock(label, 1);
+        }
+    }
+
+    protected void PropertyField(string label, SerializedProperty property, bool includeChildren, params GUILayoutOption[] options)
+    {
+        if (string.IsNullOrEmpty(label))
+        {
+            EditorGUILayout.PropertyField(property, includeChildren, options);
+        }
+        else
+        {
+            EditorGUILayout.PropertyField(property, new GUIContent(label), includeChildren, options);
+        }
+    }
+
+    protected void PropertyField(string label, SerializedProperty property, params GUILayoutOption[] options)
+    {
+        PropertyField(label, property, false, options);
+    }
+
+    protected void PropertyField(SerializedProperty property, bool includeChildren, params GUILayoutOption[] options)
+    {
+        PropertyField(null, property, includeChildren, options);
+    }
+
+    protected void PropertyField(SerializedProperty property, params GUILayoutOption[] options)
+    {
+        PropertyField(null, property, false, options);
+    }
+
+    protected void FloatPropertyField(SerializedProperty property, params GUILayoutOption[] options)
+    {
+        float newValue = EditorGUILayout.FloatField(property.floatValue, options);
+        if (newValue != property.floatValue)
+        {
+            property.floatValue = newValue;
+        }
+    }
+
+
+    protected void StringPropertyField(SerializedProperty property, params GUILayoutOption[] options)
+    {
+        string newValue = EditorGUILayout.TextField(property.stringValue, options);
+        if (newValue != property.stringValue)
+        {
+            property.stringValue = newValue;
+        }
+    }
+
+
+    protected void TexturePropertyField(SerializedProperty property, params GUILayoutOption[] options)
+    {
+        Object newValue = EditorGUILayout.ObjectField(property.objectReferenceValue, typeof(Texture2D), options);
+        if (newValue != property.objectReferenceValue)
+        {
+            property.objectReferenceValue = newValue;
+        }
+    }
+
+
+    protected void MinMaxPropertySlider(SerializedProperty minProperty, SerializedProperty maxProperty, float minCap, float maxCap, params GUILayoutOption[] options)
+    {
+        float newMin = minProperty.floatValue, newMax = maxProperty.floatValue;
+        EditorGUILayout.MinMaxSlider(ref newMin, ref newMax, minCap, maxCap, options);
+
+        if (newMin != minProperty.floatValue || newMax != maxProperty.floatValue)
+        {
+            minProperty.floatValue = newMin;
+            maxProperty.floatValue = newMax;
+        }
+    }
+
+
+    protected void MinMaxPropertySliderFields(string label, SerializedProperty minProperty, SerializedProperty maxProperty, float minCap, float maxCap, params GUILayoutOption[] options)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(5.0f);
+        Rect labelRect = GUILayoutUtility.GetRect(new GUIContent(label), EditorStyles.boldLabel);
+        GUI.Label(labelRect, label, minProperty.prefabOverride || maxProperty.prefabOverride ? EditorStyles.boldLabel : EditorStyles.label);
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(15.0f);
+        FloatPropertyField(minProperty, GUILayout.Width(40.0f));
+        MinMaxPropertySlider(minProperty, maxProperty, minCap, maxCap, options);
+        FloatPropertyField(maxProperty, GUILayout.Width(40.0f));
+        GUILayout.EndHorizontal();
+    }
+
+
+    public static void WideComment(string comment)
+    {
+        GUILayout.Box(comment, CommentStyle, GUILayout.ExpandWidth(true));
+    }
+
+
+    public static void Comment(string comment)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(105.0f);
+        WideComment(comment);
+        GUILayout.EndHorizontal();
+    }
+
+
+    public static void Header(string label)
+    {
+        GUILayout.Label(label, EditorStyles.boldLabel);
+    }
+
+
+    public static void BeginSection(string label)
+    {
+        Header(label);
+    }
+
+
+
+    public static void EndSection()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+    }
+
+
+    // Scene GUI //
+
+
+    public virtual bool RenderSceneHandles
+    {
+        get
+        {
+            return true;
+        }
+    }
+
+
+    public virtual Color SceneHandlesColor
+    {
+        get
+        {
+            return Color.green;
+        }
+    }
+
+
+
+    public Transform TargetTransform
+    {
+        get
+        {
+            return ((Component)target).transform;
+        }
+    }
+
+
+    protected virtual void DoSceneGUI()
+    // Implement your scene GUI in here for automatic camera, on/off and colour handling
+    {
+
+    }
+
+
+    public void OnPreSceneGUI()
+    {
+        cameraRendered = false;
+    }
+
+
+    public void OnSceneGUI()
+    {
+        if (!RenderSceneHandles)
+        {
+            return;
+        }
+
+        if (!cameraRendered)
+        {
+            Handles.DrawCamera(new Rect(0.0f, 0.0f, Screen.width, Screen.height), Camera.current);
+            cameraRendered = true;
+        }
+
+        Handles.color = SceneHandlesColor;
+
+        DoSceneGUI();
+    }
+
+
+    public static float AngularSlider(Vector3 position, Vector3 forward, Vector3 right, Vector3 up, float angle, float radius, Handles.DrawCapFunction capFunction, float offset = 0.0f, float handleSize = 1.0f)
+    // Create an angular slider for the given transform
+    {
+        Vector3 angleVector = PlanarAngleVector(forward, right, angle) * radius;
+        Vector3 directionVector = Vector3.Cross(angleVector, up) * -1;
+        Vector3 sliderPosition = position + angleVector + angleVector.normalized * offset;
+        Vector3 changeVector = Handles.Slider(sliderPosition, directionVector, handleSize, capFunction, 1.0f) - sliderPosition;
+        return angle + (Vector3.Angle(directionVector, changeVector) > 90.0f ? changeVector.magnitude * -1.0f : changeVector.magnitude);
+    }
+
+
+    public static float AngularSlider(Vector3 position, Vector3 forward, Vector3 right, Vector3 up, float angle, float radius, float offset = 0.0f)
+    {
+        return AngularSlider(position, forward, right, up, angle, radius, Handles.ArrowCap, offset, HandleUtility.GetHandleSize(position));
+    }
+
+
+    public static float AngularSlider(Transform transform, float angle, float radius, float offset = 0.0f)
+    {
+        return AngularSlider(transform.position, transform.forward, transform.right, transform.up, angle, radius, offset);
+    }
+
+
+    public static void DrawThickWireArc(Vector3 position, Vector3 forward, Vector3 up, float angle, float radius, int thickness, float resolution)
+    // Draw a wire arc for a transform with a given thickness and resolution
+    {
+        for (int i = 0; i < thickness; i++)
+        {
+            Handles.DrawWireArc(
+                position,
+                up,
+                forward,
+                angle,
+                radius + resolution * (float)i * HandleUtility.GetHandleSize(position)
+            );
+        }
+    }
+
+
+    public static void DrawThickWireArc(Transform transform, float angle, float radius, int thickness, float resolution)
+    {
+        DrawThickWireArc(transform.position, transform.forward, transform.up, angle, radius, thickness, resolution);
+    }
+
+
+    public static Vector3 PlanarAngleVector(Vector3 forward, Vector3 right, float angle)
+    // Produce a planar directional vector - a set degrees from the forward vector of the given transform
+    {
+        if (angle < 90.0f)
+        {
+            return Vector3.Slerp(
+                forward,
+                right,
+                angle / 90.0f
+            );
+        }
+        else if (angle < 180.0f)
+        {
+            return Vector3.Slerp(
+                right,
+                forward * -1.0f,
+                (angle - 90.0f) / 90.0f
+            );
+        }
+        else if (angle < 270.0f)
+        {
+            return Vector3.Slerp(
+                forward * -1.0f,
+                right * -1.0f,
+                (angle - 180.0f) / 90.0f
+            );
+        }
+        else
+        {
+            return Vector3.Slerp(
+                right * -1.0f,
+                forward,
+                (angle - 270.0f) / 90.0f
+            );
+        }
+    }
+
+
+    public static void MinMaxRadiusHandle(Transform transform, ref float min, ref float max, float minClamp, float maxClamp)
+    // Produce two radius handles around the given transform, one rotated 45 degrees on the up vector, scaling a min and a max
+    {
+        min = Mathf.Clamp(Handles.RadiusHandle(transform.rotation, transform.position, min), minClamp, max);
+        max = Mathf.Clamp(Handles.RadiusHandle(transform.rotation * Quaternion.AngleAxis(45.0f, transform.up), transform.position, max), min, maxClamp);
     }
     #endregion
 }

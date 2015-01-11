@@ -4,34 +4,62 @@ using System.Collections.Generic;
 using HighlightingSystem;
 using JrDevAssets;
 
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Highlighter))]
+[RequireComponent(typeof(AttachCamera))]
+[RequireComponent(typeof(GAC))]
 public class Robin : MonoBehaviour
 {
-    public CharacterSetup character;
-    public CheckerSetup checker;
-    public AttackSetup attack;
-    public OutputSetup output;
+    #region Character
+    private Animator mecanim;
+    private NavMeshAgent agent;
+    public float healthPoint = 100f;
+    public float manaPoint = 100f;
+    public float maxHp;
+    public float maxMana;
+    public float rotateSpeed = 10f;
+    #endregion
 
+    #region Attack
+    public GAC gac;
+    public float damage;
+    public float attackRange = 5f;
+    public float attackAngle;
+    public GameObject attackEffect;
+    #endregion
+
+    #region Checker
+    public LayerMask mouseRayIgnore;
+    public string enemyTag;
+    public GameObject lockOnEnemy;
+    #endregion
+
+    #region Third party
+    public bool useHighlightingSystem;
+    private Highlighter highlight;
+    public Color highlightColor;
+    public float highlightRayLength = 5f;
+    public float highlightRayOffset;
+    public MouseInteractModule mouseModule;
+    #endregion
+
+    #region UI
     public UiBarManager playerHealthBar;
     public UiBarManager playerManaBar;
     public UiBarManager hoverEnemyHealthBar;
-
-    public LayerMask groundLayer;
-    public LayerMask mouseRayIgnore;
-    
-    private NavMeshAgent _agent;
-    private Highlighter _highlight;
-    private AttachCamera _camera;
-    public float _maxHp;
-    public float _maxMana;
+    private AttachCamera arpgCamera;
+    #endregion
 
     void Awake()
     {
-        _agent = GetComponent<NavMeshAgent>();
-        _highlight = GetComponent<Highlighter>();
-        _camera = Camera.main.GetComponent<AttachCamera>();
-        character.mecanim = GetComponent<Animator>();
-        _maxHp = character.healthPoint;
-        _maxMana = character.manaPoint;
+        agent = GetComponent<NavMeshAgent>();
+        highlight = GetComponent<Highlighter>();
+        arpgCamera = Camera.main.GetComponent<AttachCamera>();
+        mecanim = GetComponent<Animator>();
+        gac = GetComponent<GAC>();
+        maxHp = healthPoint;
+        maxMana = manaPoint;
         SetHealthBar(hoverEnemyHealthBar, false, Vector2.zero);
     }
 
@@ -42,8 +70,8 @@ public class Robin : MonoBehaviour
 
     void Update()
     {
-        MouseAction();
-        GroundCheck();
+        if (mouseModule)
+            MouseAction();
         CharacterUI();
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -57,17 +85,10 @@ public class Robin : MonoBehaviour
 
     }
 
-    private RaycastHit[] GetMouseHit(Ray ray, float length)
-    {
-        RaycastHit[] _hit;
-        _hit = Physics.RaycastAll(ray, length);
-        return _hit;
-    }
-
     void CharacterUI()
     {
-        SetHealthBar(playerHealthBar, true, new Vector2(character.healthPoint, _maxHp));
-        SetHealthBar(playerManaBar, true, new Vector2(character.manaPoint, _maxMana));
+        SetHealthBar(playerHealthBar, true, new Vector2(healthPoint, maxHp));
+        SetHealthBar(playerManaBar, true, new Vector2(manaPoint, maxMana));
     }
 
     private void SetHealthBar(UiBarManager ui, bool show, Vector2 value)
@@ -86,148 +107,134 @@ public class Robin : MonoBehaviour
 
     void GetHit(float damage)
     {
-        if (character.healthPoint - damage > 0)
-            character.healthPoint -= damage;
+        if (healthPoint - damage > 0)
+            healthPoint -= damage;
         else
-            character.healthPoint = 0;
-        //character.mecanim.Play("GetHit" + Random.Range(1, 3), 1);
-        character.mecanim.SetTrigger("GetHit");
+            healthPoint = 0;
+        mecanim.Play("GetHit" + Random.Range(1, 3), 1);
+        mecanim.SetTrigger("GetHit");
     }
 
     void MouseAction()
     {
-        Ray _mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] _hits = GetMouseHit(_mouseRay, checker.mouseRayLength);
-        //Check all object on raycasthit
-        for (int e = 0; e < _hits.Length; e++)
+        mouseModule.MouseInteract();
+
+        if (mouseModule.OnHover(enemyTag))
         {
-            if (_hits[e].collider.gameObject.tag == "Enemy")
+            mouseModule.SetCursor(MouseInteractModule.MouseCursorType.Hover);
+            mouseModule.hoverEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
+            if (mouseModule.hoverEnemy.GetComponent<Oracle>())
             {
-                GameManager.SetCursor(GameManager.MouseCursorType.Hover);
-                output.hoverEnemy = _hits[e].collider.gameObject;
-                output.hoverEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
-                Vector2 _v = output.hoverEnemy.GetComponent<Oracle>().GetHealthBar();
-                SetHealthBar(hoverEnemyHealthBar, true, _v);
-                break;
-            }
-            else
-            {
-                GameManager.SetCursor(GameManager.MouseCursorType.Normal);
-                if (output.hoverEnemy != null)
-                {
-                    output.hoverEnemy.SendMessage("Off", SendMessageOptions.DontRequireReceiver);
-                    output.hoverEnemy = null;
-                    SetHealthBar(hoverEnemyHealthBar, false, Vector2.zero);
-                }
+                Vector2 v = mouseModule.hoverEnemy.GetComponent<Oracle>().GetHealthBar();
+                SetHealthBar(hoverEnemyHealthBar, true, v);
             }
         }
+        else
+        {
+            mouseModule.SetCursor(MouseInteractModule.MouseCursorType.Normal);
+            SetHealthBar(hoverEnemyHealthBar, false, Vector2.zero);
+        }
 
-        //When pressing mouse left-button
         if (Input.GetMouseButton(0))
         {
-            //Check all raycasthit object again, and get pointer
-            for (int i = 0; i < _hits.Length; i++)
-            {
-                if (_hits[i].collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                {
-                    output.pointerPosition = _hits[i].point;
-                    if (output.lockOnEnemy != null)
-                        output.lockOnEnemy = null;
-                    break;
-                }
-            }
+            if (lockOnEnemy)
+                lockOnEnemy = null;
 
-            //If mouse currently point at hoverEnemy
-            if (output.hoverEnemy != null)
+            if (mouseModule.hoverEnemy)
             {
-                if (Vector3.Distance(transform.position, output.hoverEnemy.transform.position) < attack.attackRange)
+                GameObject pointAt = mouseModule.hoverEnemy;
+                if (Vector3.Distance(transform.position, pointAt.transform.position) < attackRange)
                 {
-                    attack.GacSyatem.enabled = true;
-                    _agent.Stop();
-                    transform.rotation = LookRotation(output.hoverEnemy.transform.position, character.rotateSpeed);
+                    gac.enabled = true;
+                    agent.Stop();
+                    transform.rotation = LookRotation(pointAt.transform.position, rotateSpeed);
                 }
                 else
                 {
-                    output.lockOnEnemy = output.hoverEnemy;
+                    lockOnEnemy = pointAt;
                 }
             }
             else
             {
-                attack.GacSyatem.enabled = false;
-                if (!character.mecanim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-                    if (Vector3.Distance(transform.position, output.pointerPosition) > 1f)
-                        _agent.destination = output.pointerPosition;
+                gac.enabled = false;
+                if (!mecanim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+                    if (Vector3.Distance(transform.position, mouseModule.mousePosition) > 1f)
+                        agent.destination = mouseModule.mousePosition;
             }
         }
 
-        float _moveSpeed = Mathf.Max(Mathf.Abs(_agent.velocity.normalized.x), Mathf.Abs(_agent.velocity.normalized.z));
+        float moveSpeed = Mathf.Max(Mathf.Abs(agent.velocity.normalized.x), Mathf.Abs(agent.velocity.normalized.z));
 
-        character.mecanim.SetFloat("MoveSpeed", _moveSpeed);
+        mecanim.SetFloat("MoveSpeed", moveSpeed);
 
-        Ray _topRay = new Ray(transform.position + new Vector3(0f, checker.highlightRayOffset, 0f), new Vector3(0, 1, -1));
-        Debug.DrawRay(_topRay.origin, _topRay.direction * checker.highlightRayLength, Color.red);
-        if (Physics.Raycast(_topRay, checker.highlightRayLength, checker.mouseRayIgnore))
-            _highlight.On(checker.highlightColor);
-        else
-            _highlight.Off();
+        if (useHighlightingSystem)
+            HighlightCheck();
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButton(0))
         {
-            _agent.Stop();
-            transform.rotation = LookRotation(output.pointerPosition, character.rotateSpeed);
+            agent.Stop();
+            transform.rotation = LookRotation(mouseModule.mousePosition, rotateSpeed);
         }
 
-        Debug.DrawRay(_mouseRay.origin, _mouseRay.direction * checker.mouseRayLength, Color.magenta);
-
-        if (output.lockOnEnemy != null)
+        if (lockOnEnemy)
             LockOnEnemy();
     }
 
-    public void Attack()
-    {
-        GameObject target = null;
-        if (output.lockOnEnemy != null)
-            target = output.lockOnEnemy;
-        else if (output.hoverEnemy != null)
-            target = output.hoverEnemy;
-        if (attack.GacSyatem.enabled && target != null)
-        {
-            transform.rotation = LookRotation(target.transform.position, character.rotateSpeed);
-            target.GetComponent<GAC_TargetTracker>().playDamage = true;
-            target.GetComponent<GAC_TargetTracker>().DamageMovement(gameObject, target);
-            float _dmg = Mathf.RoundToInt(Random.Range(-attack.damage / 10, attack.damage / 10)) + attack.damage;
-            target.SendMessage("GetHit", _dmg);
-            GameManager.CreateDamageText(target, _dmg.ToString(), Color.white, new Vector3(Random.Range(-5, 6), 5, 0));
-            if (attack.attackEffect)
-                Instantiate(attack.attackEffect, transform.position, Quaternion.identity);
-        }
-        if (output.lockOnEnemy != null)
-            output.lockOnEnemy = null;
-    }
-
-    void LockOnEnemy()
-    {
-        if (attack.GacSyatem.enabled)
-            attack.GacSyatem.enabled = false;
-        _agent.destination = output.lockOnEnemy.transform.position;
-        output.lockOnEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
-        //Vector2 _v = output.lockOnEnemy.GetComponent<Oracle>().GetHealthBar();
-        //SetHealthBar(true, _v);
-        if (Vector3.Distance(transform.position, output.lockOnEnemy.transform.position) < attack.attackRange)
-        {
-            attack.GacSyatem.enabled = true;
-            _agent.Stop();
-            character.mecanim.Play("Combo1");
-            return;
-        }
-    }
-
-    Quaternion LookRotation(Vector3 target, float speed)
+    public Quaternion LookRotation(Vector3 target, float speed)
     {
         float step = speed * Time.deltaTime;
         Vector3 direction = (target - transform.position).normalized;
         Vector3 tween = Vector3.RotateTowards(transform.forward, new Vector3(direction.x, 0, direction.z), step, 0.0f);
         return Quaternion.LookRotation(tween);
+    }
+
+    void HighlightCheck()
+    {
+        Ray top = new Ray(transform.position + new Vector3(0f, highlightRayOffset, 0f), new Vector3(0, 1, -1));
+        Debug.DrawRay(top.origin, top.direction * highlightRayLength, Color.red, 0);
+        if (Physics.Raycast(top, highlightRayLength, mouseRayIgnore))
+            highlight.On(highlightColor);
+        else
+            highlight.Off();
+    }
+
+    public void Attack()
+    {
+        GameObject target = null;
+        if (lockOnEnemy)
+            target = lockOnEnemy;
+        else if (mouseModule.hoverEnemy != null)
+            target = mouseModule.hoverEnemy;
+        if (gac.enabled && target != null)
+        {
+            transform.rotation = LookRotation(target.transform.position, rotateSpeed);
+            target.GetComponent<GAC_TargetTracker>().playDamage = true;
+            target.GetComponent<GAC_TargetTracker>().DamageMovement(gameObject, target);
+            float dmg = Mathf.RoundToInt(Random.Range(-damage / 10, damage / 10)) + damage;
+            target.SendMessage("GetHit", dmg);
+            GameManager.CreateDamageText(target, dmg.ToString(), Color.white, new Vector3(Random.Range(-5, 6), 5, 0));
+            if (attackEffect)
+                Instantiate(attackEffect, transform.position, Quaternion.identity);
+        }
+        if (lockOnEnemy)
+            lockOnEnemy = null;
+    }
+
+    void LockOnEnemy()
+    {
+        if (gac.enabled)
+            gac.enabled = false;
+        agent.destination = lockOnEnemy.transform.position;
+        lockOnEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
+        Vector2 v = lockOnEnemy.GetComponent<Oracle>().GetHealthBar();
+        SetHealthBar(hoverEnemyHealthBar, true, v);
+        if (Vector3.Distance(transform.position, lockOnEnemy.transform.position) < attackRange)
+        {
+            gac.enabled = true;
+            agent.Stop();
+            mecanim.Play("Combo1");
+            return;
+        }
     }
 
     void OnDrawGizmos()
@@ -244,11 +251,12 @@ public class Robin : MonoBehaviour
         //Gizmos.DrawRay(transform.position, transform.forward * 10f);
     }
 
-    private void GroundCheck()
+    //=================================================
+    public static bool CheckLayer(GameObject target, LayerMask layer)
     {
-        if (Physics.Raycast(transform.position + new Vector3(0, checker.groundRayOffset, 0), -transform.up, checker.groundRayLength, checker.ground))
-            output.isGrounded = true;
+        if (((1 << target.layer) & layer) != 0)
+            return true;
         else
-            output.isGrounded = false;
+            return false;
     }
 }
