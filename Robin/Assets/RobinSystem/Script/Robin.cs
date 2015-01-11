@@ -167,8 +167,7 @@ public class Robin : MonoBehaviour
 
         mecanim.SetFloat("MoveSpeed", moveSpeed);
 
-        if (useHighlightingSystem)
-            HighlightCheck();
+
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButton(0))
         {
@@ -178,6 +177,9 @@ public class Robin : MonoBehaviour
 
         if (lockOnEnemy)
             LockOnEnemy();
+
+        if (useHighlightingSystem)
+            HighlightCheck();
     }
 
     public Quaternion LookRotation(Vector3 target, float speed)
@@ -190,9 +192,16 @@ public class Robin : MonoBehaviour
 
     void HighlightCheck()
     {
-        Ray top = new Ray(transform.position + new Vector3(0f, highlightRayOffset, 0f), new Vector3(0, 1, -1));
-        Debug.DrawRay(top.origin, top.direction * highlightRayLength, Color.red, 0);
-        if (Physics.Raycast(top, highlightRayLength, mouseRayIgnore))
+        //Ray top = new Ray(transform.position + new Vector3(0f, highlightRayOffset, 0f), new Vector3(0, 1, -1));
+        //Debug.DrawLine(top.origin,top.origin+(new Vector3(0,1,-1)*highlightRayLength), Color.red);
+        //if (Physics.SphereCast(top, 0.5f, highlightRayLength, mouseRayIgnore))
+        //{
+        //    highlight.On(highlightColor);
+        //    highlight.SeeThroughOff();
+        //}
+        //else
+        //    highlight.Off();
+        if (Physics.CheckCapsule(transform.position + new Vector3(0f, highlightRayOffset, 0f), transform.position + new Vector3(0f, highlightRayOffset, 0f) + new Vector3(0, highlightRayLength, -highlightRayLength), 0.5f, mouseRayIgnore))
             highlight.On(highlightColor);
         else
             highlight.Off();
@@ -249,6 +258,8 @@ public class Robin : MonoBehaviour
         ////Front check
         //Gizmos.color = Color.red;
         //Gizmos.DrawRay(transform.position, transform.forward * 10f);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0f, highlightRayOffset, 0f), 0.5f);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0f, highlightRayOffset, 0f) + new Vector3(0, highlightRayLength, -highlightRayLength), 0.5f);
     }
 
     //=================================================
