@@ -5,8 +5,13 @@ using HighlightingSystem;
 using JrDevAssets;
 using System.Collections.Generic;
 
-public class MouseInteractModule : MonoBehaviour
+public class MouseModule : MonoBehaviour
 {
+    #region Editor
+    public MenuState menuState = MenuState.Basic;
+    public enum MenuState { Basic, Cursor, Output };
+    #endregion
+
     public Camera handleCamera;
     public LayerMask groundLayer;
     public float mouseRayLength = 10f;

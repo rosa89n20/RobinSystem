@@ -4,15 +4,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 
-[CustomEditor(typeof(MouseInteractModule))]
-public class MouseModule : RobinEditor
+[CustomEditor(typeof(MouseModule))]
+public class MouseModuleEditor : RobinEditor
 {
     #region Public attributes
-    private MenuState menuState = MenuState.Basic;
-    private enum MenuState { Basic, Cursor, Output };
     #endregion
 
     #region Private attributes
+    private MouseModule me;
     private SerializedProperty camera;
     private SerializedProperty groundLayer;
     private SerializedProperty length;
@@ -30,6 +29,7 @@ public class MouseModule : RobinEditor
     #region Main methods
     protected override void Initialize()
     {
+        me = (MouseModule)target;
         camera = serializedObject.FindProperty("handleCamera");
         groundLayer = serializedObject.FindProperty("groundLayer");
         length = serializedObject.FindProperty("mouseRayLength");
@@ -50,33 +50,35 @@ public class MouseModule : RobinEditor
 
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Basic"))
-            menuState = MenuState.Basic;
+            me.menuState = MouseModule.MenuState.Basic;
         if (GUILayout.Button("Cursor"))
-            menuState = MenuState.Cursor;
+            me.menuState = MouseModule.MenuState.Cursor;
         if (GUILayout.Button("Output"))
-            menuState = MenuState.Output;
+            me.menuState = MouseModule.MenuState.Output;
         EditorGUILayout.EndHorizontal();
+
+        
 
         //BeginSection("Setup");
         //PropertyField("Camera", camera);
         //PropertyField("Ray Length", length);
         //PropertyField("Ground Layer", groundLayer);
         //EndSection();
-        if (menuState == MenuState.Basic)
+        if (me.menuState == MouseModule.MenuState.Basic)
         {
             ShowBlock("Basic Setup", 3);
             BlockPropertyField("Camera", 1, camera);
             BlockPropertyField("Ray Length", 2, length);
             BlockPropertyField("Ground Layer", 3, groundLayer);
         }
-        else if (menuState == MenuState.Cursor)
+        else if (me.menuState == MouseModule.MenuState.Cursor)
         {
             ShowBlock("Cursor Setup", 3);
             BlockPropertyField("Normal", 1, normalCursor);
             BlockPropertyField("Hover", 2, hoverCursor);
             BlockPropertyField("Active", 3, activeCursor);
         }
-        else if (menuState == MenuState.Output)
+        else if (me.menuState == MouseModule.MenuState.Output)
         {
             ShowBlock("Output", 2);
             BlockPropertyField("Position", 1, position);

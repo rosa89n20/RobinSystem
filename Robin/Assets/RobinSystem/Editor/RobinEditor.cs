@@ -163,17 +163,10 @@ public abstract class RobinEditor : Editor
 
     #region 3-part
     protected SerializedObject serializedObject;
-
-
     private static GUIStyle commentStyle = null;
     private static bool cameraRendered = false;
 
-
-    // General //
-
-
     protected abstract void Initialize();
-
 
     public void BeginEdit()
     {
@@ -188,15 +181,10 @@ public abstract class RobinEditor : Editor
         Initialize();
     }
 
-
     public void EndEdit()
     {
         serializedObject.ApplyModifiedProperties();
     }
-
-
-    // Inspector GUI //
-
 
     public static GUIStyle CommentStyle
     {
@@ -241,6 +229,7 @@ public abstract class RobinEditor : Editor
         }
     }
 
+    #region Property Field
     protected void PropertyField(string label, SerializedProperty property, bool includeChildren, params GUILayoutOption[] options)
     {
         if (string.IsNullOrEmpty(label))
@@ -267,6 +256,7 @@ public abstract class RobinEditor : Editor
     {
         PropertyField(null, property, false, options);
     }
+    #endregion
 
     protected void FloatPropertyField(SerializedProperty property, params GUILayoutOption[] options)
     {
@@ -396,14 +386,14 @@ public abstract class RobinEditor : Editor
     protected virtual void DoSceneGUI()
     // Implement your scene GUI in here for automatic camera, on/off and colour handling
     {
-
+        
     }
 
 
-    public void OnPreSceneGUI()
-    {
-        cameraRendered = false;
-    }
+    //public void OnPreSceneGUI()
+    //{
+    //    cameraRendered = false;
+    //}
 
 
     public void OnSceneGUI()

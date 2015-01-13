@@ -41,7 +41,7 @@ public class Robin : MonoBehaviour
     public Color highlightColor;
     public float highlightRayLength = 5f;
     public float highlightRayOffset;
-    public MouseInteractModule mouseModule;
+    public MouseModule mouseModule;
     #endregion
 
     #region UI
@@ -121,7 +121,7 @@ public class Robin : MonoBehaviour
 
         if (mouseModule.OnHover(enemyTag))
         {
-            mouseModule.SetCursor(MouseInteractModule.MouseCursorType.Hover);
+            mouseModule.SetCursor(MouseModule.MouseCursorType.Hover);
             mouseModule.hoverEnemy.SendMessage("On", Color.red, SendMessageOptions.DontRequireReceiver);
             if (mouseModule.hoverEnemy.GetComponent<Oracle>())
             {
@@ -131,7 +131,7 @@ public class Robin : MonoBehaviour
         }
         else
         {
-            mouseModule.SetCursor(MouseInteractModule.MouseCursorType.Normal);
+            mouseModule.SetCursor(MouseModule.MouseCursorType.Normal);
             SetHealthBar(hoverEnemyHealthBar, false, Vector2.zero);
         }
 
