@@ -16,7 +16,8 @@ public class UiBarManager : MonoBehaviour
 
     void Update()
     {
-        text.text = Mathf.RoundToInt(value.x) + "/" + Mathf.RoundToInt(value.y);
+        if (text)
+            text.text = Mathf.RoundToInt(value.x) + "/" + Mathf.RoundToInt(value.y);
     }
 
     public void SetValue(Vector2 point)
@@ -24,5 +25,12 @@ public class UiBarManager : MonoBehaviour
         value = point;
         float _s = value.x / value.y;
         bar.sizeDelta = new Vector2(_defaultBarWidth * _s, bar.sizeDelta.y);
+    }
+
+    public void SetScale(Vector2 point)
+    {
+        value = point;
+        float _s = value.x / value.y;
+        bar.localScale = new Vector3(_s, 1, 1);
     }
 }

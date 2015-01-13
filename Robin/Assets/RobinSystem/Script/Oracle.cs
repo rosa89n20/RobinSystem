@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Oracle : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Oracle : MonoBehaviour
     //public float chaseRange = 4f;
     public float attackRange = .5f;
     public float damage = 20f;
+    private float normalizedHealth;
 
     public AiState aiState;
     public enum AiState { Idle, Patrol, Chase, Dead }
@@ -31,6 +33,7 @@ public class Oracle : MonoBehaviour
 
     void Awake()
     {
+        screen = new Vector2(Screen.width, Screen.height);
         _agent = GetComponent<NavMeshAgent>();
         _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
@@ -39,6 +42,12 @@ public class Oracle : MonoBehaviour
             aiState = AiState.Idle;
         else
             aiState = AiState.Patrol;
+
+        GameObject bar;
+        bar = Instantiate(Resources.Load("MiniHealthBar", typeof(GameObject))) as GameObject;
+        myBar = bar.GetComponent<RectTransform>();
+        myBar.SetParent(GameObject.Find("Canvas").transform, false);
+        myBarManager = bar.GetComponent<UiBarManager>();
     }
 
     void Start()
@@ -46,8 +55,35 @@ public class Oracle : MonoBehaviour
         originalPosition = transform.position;
     }
 
+    //public int miniHealthBarWidth = 100;
+    //public int miniHealthBarHeight = 10;
+    public Vector2 miniHealthBarOffset = new Vector2(0, 20);
+
+    private Vector3 thisScreenPosition;
+    private Vector2 screen;
+
+    //void OnGUI()
+    //{
+    //    GUI.skin = Resources.Load("Enemy", typeof(GUISkin)) as GUISkin;
+    //    GUI.color = Color.black;
+    //    GUI.Box(new Rect(thisScreenPosition.x + miniHealthBarOffset.x - (miniHealthBarWidth * 0.5f), screen.y - (thisScreenPosition.y + miniHealthBarOffset.y - (miniHealthBarHeight * 0.5f)), miniHealthBarWidth, miniHealthBarHeight), "", GUI.skin.GetStyle("maxbar"));
+    //    GUI.color = Color.green;
+    //    GUI.Box(new Rect(thisScreenPosition.x + miniHealthBarOffset.x - (miniHealthBarWidth * 0.5f), screen.y - (thisScreenPosition.y + miniHealthBarOffset.y - (miniHealthBarHeight * 0.5f)), miniHealthBarWidth * normalizedHealth, miniHealthBarHeight), "", GUI.skin.GetStyle("minbar"));
+    //}
+
+    private RectTransform myBar;
+    private UiBarManager myBarManager;
+
     void Update()
     {
+        if (!isDead)
+        {
+            thisScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
+            myBar.position = new Vector3(thisScreenPosition.x + miniHealthBarOffset.x, thisScreenPosition.y + miniHealthBarOffset.y, 0);
+            normalizedHealth = health / maxHealth;
+            myBarManager.SetScale(GetHealthBar());
+        }
+
         if (aiState == AiState.Patrol)
         {
             if (_agent.hasPath)
@@ -110,13 +146,15 @@ public class Oracle : MonoBehaviour
                 GetComponent<CharacterController>().enabled = false;
                 GetComponent<SphereCollider>().enabled = false;
                 //DropTreasure();
-                Destroy(gameObject, 5f);
+                Destroy(gameObject, 15f);
+                Destroy(myBar.gameObject, 0);
                 isDead = true;
             }
         }
 
         if (health <= 0)
         {
+            health = 0;
             aiState = AiState.Dead;
         }
 

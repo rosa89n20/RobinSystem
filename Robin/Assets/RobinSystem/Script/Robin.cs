@@ -82,7 +82,7 @@ public class Robin : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        
     }
 
     void CharacterUI()
@@ -167,7 +167,7 @@ public class Robin : MonoBehaviour
 
         mecanim.SetFloat("MoveSpeed", moveSpeed);
 
-
+        
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButton(0))
         {

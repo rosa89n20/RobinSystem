@@ -18,7 +18,7 @@ public class MouseModule : RobinEditor
     private SerializedProperty length;
     private SerializedProperty position;
     private SerializedProperty hits;
-    //private SerializedProperty hover;
+    private SerializedProperty hover;
     private SerializedProperty normalCursor;
     private SerializedProperty hoverCursor;
     private SerializedProperty activeCursor;
@@ -35,7 +35,7 @@ public class MouseModule : RobinEditor
         length = serializedObject.FindProperty("mouseRayLength");
         position = serializedObject.FindProperty("mousePosition");
         hits = serializedObject.FindProperty("mouseHits");
-        //hover = serializedObject.FindProperty("hoverEnemy");
+        hover = serializedObject.FindProperty("hoverEnemy");
         normalCursor = serializedObject.FindProperty("normalCursor");
         hoverCursor = serializedObject.FindProperty("hoverCursor");
         activeCursor = serializedObject.FindProperty("activeCursor");
@@ -78,9 +78,9 @@ public class MouseModule : RobinEditor
         }
         else if (menuState == MenuState.Output)
         {
-            ShowBlock("Output", 1);
+            ShowBlock("Output", 2);
             BlockPropertyField("Position", 1, position);
-            //BlockPropertyField("On Hover", 2, hover);
+            BlockPropertyField("On Hover", 2, hover);
             ArrayProperty("Mouse Hits", hits.name, serializedObject);
         }
         //BeginSection("Output");
