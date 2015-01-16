@@ -60,6 +60,9 @@
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingTransparent.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingComposite.shader" />
      <None Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\History.txt" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>C:/Users/jack/Documents/GitHub/RobinSystem/Robin/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
  <Reference Include="Assembly-Boo">
  <HintPath>C:/Users/jack/Documents/GitHub/RobinSystem/Robin/Library/ScriptAssemblies/Assembly-Boo.dll</HintPath>
  </Reference>

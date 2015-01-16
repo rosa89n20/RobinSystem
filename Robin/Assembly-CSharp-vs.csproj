@@ -75,6 +75,7 @@
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Plugins\GAC_TouchSetup.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Plugins\JrDevArts_Utilities.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Plugins\JrDev_Icons.cs" />
+     <Compile Include="Assets\RobinSystem\Plugins\CameraModule.cs" />
      <Compile Include="Assets\RobinSystem\Plugins\MouseModule.cs" />
      <Compile Include="Assets\RobinSystem\Script\AttachCamera.cs" />
      <Compile Include="Assets\RobinSystem\Script\DamageText.cs" />
@@ -89,6 +90,9 @@
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingTransparent.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingComposite.shader" />
      <None Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\History.txt" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>C:/Users/jack/Documents/GitHub/RobinSystem/Robin/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

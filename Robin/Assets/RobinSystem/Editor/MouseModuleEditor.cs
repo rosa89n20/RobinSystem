@@ -57,8 +57,6 @@ public class MouseModuleEditor : RobinEditor
             me.menuState = MouseModule.MenuState.Output;
         EditorGUILayout.EndHorizontal();
 
-        
-
         //BeginSection("Setup");
         //PropertyField("Camera", camera);
         //PropertyField("Ray Length", length);

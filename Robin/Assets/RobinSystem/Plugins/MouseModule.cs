@@ -33,6 +33,8 @@ public class MouseModule : MonoBehaviour
     public Texture2D hoverCursor;
     public Texture2D activeCursor;
 
+    public float mouseWheel;
+
     void Awake()
     {
         if (!handleCamera)
@@ -100,10 +102,16 @@ public class MouseModule : MonoBehaviour
         return list.ToArray();
     }
 
+    public float GetMouseWheel()
+    {
+        return mouseWheel;
+    }
+
     public void MouseInteract()
     {
         RaycastHit[] hits = CastRay(handleCamera, mouseRayLength);
         mouseHits = GetMouseHits(hits);
         mousePosition = CheckTargetedPosition(hits, groundLayer);
+        mouseWheel = Input.GetAxis("Mouse ScrollWheel");
     }
 }
