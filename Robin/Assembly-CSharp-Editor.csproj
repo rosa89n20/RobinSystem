@@ -50,16 +50,15 @@
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Editor\GAC_PAC.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Editor\GAC_TAG.cs" />
      <Compile Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\Editor\GAC_Tracker_Editor.cs" />
-     <Compile Include="Assets\RobinSystem\Editor\BuiltInResourcesWindow.cs" />
      <Compile Include="Assets\RobinSystem\Editor\MouseModuleEditor.cs" />
      <Compile Include="Assets\RobinSystem\Editor\RobinEditor.cs" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingCut.shader" />
-     <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlit.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlur.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingOpaque.shader" />
+     <None Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\History.txt" />
+     <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlit.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingTransparent.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingComposite.shader" />
-     <None Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\History.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

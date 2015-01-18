@@ -55,12 +55,12 @@
      <Compile Include="Assets\Plugins\HighlightingSystem\Scripts\Internal\ShaderPropertyID.cs" />
      <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingCut.shader" />
-     <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlit.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlur.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingOpaque.shader" />
+     <None Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\History.txt" />
+     <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingBlit.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingTransparent.shader" />
      <None Include="Assets\Plugins\HighlightingSystem\Resources\HighlightingComposite.shader" />
-     <None Include="Assets\JrDevAssets\GAC - GreatAnimationCombos\History.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>

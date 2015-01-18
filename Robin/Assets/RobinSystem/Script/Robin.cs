@@ -42,6 +42,7 @@ public class Robin : MonoBehaviour
     public float highlightRayLength = 5f;
     public float highlightRayOffset;
     public MouseModule mouseModule;
+    public CameraModule cameraModule;
     #endregion
 
     #region UI
@@ -72,7 +73,11 @@ public class Robin : MonoBehaviour
     {
         if (mouseModule)
             MouseAction();
+        if (cameraModule)
+            CameraAction();
         CharacterUI();
+
+
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -82,7 +87,7 @@ public class Robin : MonoBehaviour
 
     void FixedUpdate()
     {
-        
+
     }
 
     void CharacterUI()
@@ -113,6 +118,19 @@ public class Robin : MonoBehaviour
             healthPoint = 0;
         mecanim.Play("GetHit" + Random.Range(1, 3), 1);
         mecanim.SetTrigger("GetHit");
+    }
+
+    void CameraAction()
+    {
+        cameraModule.ApplyCamera(transform);
+
+        float mouseWheel = Input.GetAxis("Mouse ScrollWheel");
+        if (Mathf.Abs(mouseWheel) > 0f)
+            cameraModule.SetCameraHeight(cameraModule.GetCameraHeight() + mouseWheel * 2f);
+
+        float mouseX = Input.GetAxis("Mouse X");
+        if (Input.GetMouseButton(1))
+            cameraModule.SetCameraAngle(cameraModule.GetCameraAngle() + mouseX * 5f);
     }
 
     void MouseAction()
@@ -167,7 +185,7 @@ public class Robin : MonoBehaviour
 
         mecanim.SetFloat("MoveSpeed", moveSpeed);
 
-        
+
 
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButton(0))
         {

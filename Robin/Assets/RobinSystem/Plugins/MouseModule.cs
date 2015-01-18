@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 using HighlightingSystem;
 using JrDevAssets;
-using System.Collections.Generic;
 
 public class MouseModule : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class MouseModule : MonoBehaviour
     public enum MenuState { Basic, Cursor, Output };
     #endregion
 
+    #region Public
     public Camera handleCamera;
     public LayerMask groundLayer;
     public float mouseRayLength = 10f;
@@ -19,21 +19,24 @@ public class MouseModule : MonoBehaviour
     public GameObject[] mouseHits;
     public GameObject hoverEnemy;
     public enum MouseCursorType { Normal, Hover, Active }
-    //public Texture2D NormalCursor { get { return MouseControlModule.normalCursor; } set { MouseControlModule.normalCursor = value; } }
-    //public Texture2D HoverCursor { get { return MouseControlModule.hoverCursor; } set { MouseControlModule.hoverCursor = value; } }
-    //public Texture2D ActiveCursor { get { return MouseControlModule.activeCursor; } set { MouseControlModule.activeCursor = value; } }
-
-    //static Texture2D normalCursor;
-    //static Texture2D hoverCursor;
-    //static Texture2D activeCursor;
-
-    private RaycastHit[] hits;
-
     public Texture2D normalCursor;
     public Texture2D hoverCursor;
     public Texture2D activeCursor;
-
     public float mouseWheel;
+    //public Texture2D NormalCursor { get { return MouseControlModule.normalCursor; } set { MouseControlModule.normalCursor = value; } }
+    //public Texture2D HoverCursor { get { return MouseControlModule.hoverCursor; } set { MouseControlModule.hoverCursor = value; } }
+    //public Texture2D ActiveCursor { get { return MouseControlModule.activeCursor; } set { MouseControlModule.activeCursor = value; } }
+    #endregion
+
+    #region Private
+    private RaycastHit[] hits;
+    #endregion
+
+    #region Static
+    //static Texture2D normalCursor;
+    //static Texture2D hoverCursor;
+    //static Texture2D activeCursor;
+    #endregion
 
     void Awake()
     {
@@ -44,6 +47,7 @@ public class MouseModule : MonoBehaviour
     public RaycastHit[] CastRay(Camera camera, float length)
     {
         Ray mouseRay = camera.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(mouseRay.origin, mouseRay.direction * mouseRayLength, Color.green);
         RaycastHit[] hits;
         hits = Physics.RaycastAll(mouseRay, length);
         return hits;

@@ -3,107 +3,100 @@ using System.Collections;
 
 public class CameraModule : MonoBehaviour
 {
+    #region Public
     public Camera handleCamera;
-    public Transform target;
     public float distance = 7f;
+    public float maxDistance = 9f;
+    public float minDistance = 5f;
     public float height = 3f;
-    public float angularSmoothLag = 0.3f;
+    public float maxHeight = 10f;
+    public float minHeight = 2f;
+    public float angle = 0f;
+    public float angularSmoothTime = 0.3f;
     public float angularMaxSpeed = 15f;
-    public float heightSmoothLag = 0.3f;
-    public float snapSmoothLag = 0.2f;
-    public float snapMaxSpeed = 720f;
+    public float heightSmoothTime = 0.3f;
     public float clampHeadPositionScreenSpace = 0.75f;
-    public float lockCameraTimeout = 0.2f;
+    public bool autoLookAt = false;
+    #endregion
+
+    #region Private
+    private float heightVelocity = 0;
+    private float angleVelocity = 0;
+    #endregion
 
     void Awake()
     {
         if (!handleCamera)
             handleCamera = Camera.main;
-
     }
 
-
-    float AngleDistance(float a, float b)
+    private float AngleDistance(float a, float b)
     {
         a = Mathf.Repeat(a, 360f);
         b = Mathf.Repeat(b, 360f);
         return Mathf.Abs(b - a);
     }
 
-    Vector3 headOffset = Vector3.zero;
-    Vector3 centerOffset = Vector3.zero;
-    float heightVelocity = 0;
-    float angleVelocity = 0;
-    bool snap = false;
-    float targetHeight = 100000;
-
-    void ApplyCamera(Transform target, Vector3 center)
+    public void ApplyCamera(Transform target)
     {
-        Vector3 targetCenter = target.position + centerOffset;
-        Vector3 targetHead = target.position + headOffset;
-
-        float originalTargetAngle = target.eulerAngles.y;
+        angle = Mathf.Repeat(angle, 360f);
+        if (autoLookAt)
+            LookAt(target);
+        else
+            handleCamera.transform.eulerAngles = new Vector3(handleCamera.transform.eulerAngles.x, angle, handleCamera.transform.eulerAngles.z);
+        ////Set camera euler angle not over 360 degree
+        float originalTargetAngle = transform.eulerAngles.y;
         float currentAngle = handleCamera.transform.eulerAngles.y;
 
         float targetAngle = originalTargetAngle;
 
-        if (snap)
-        {
-            if (AngleDistance(currentAngle, originalTargetAngle) < 3f)
-                snap = false;
+        if (AngleDistance(currentAngle, targetAngle) > 160f)
+            targetAngle += 180f;
 
-            currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref angleVelocity, snapSmoothLag, snapMaxSpeed);
-        }
-        else
-        {
-            if (AngleDistance(currentAngle, targetAngle) > 160f)
-                targetAngle += 180f;
-
-            currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref angleVelocity, angularSmoothLag, angularMaxSpeed);
-        }
-
-        targetHeight = targetCenter.y + height;
-
-        float currentHeight = handleCamera.transform.position.y;
-        currentHeight = Mathf.SmoothDamp(currentHeight, targetHeight, ref heightVelocity, heightSmoothLag);
-
+        currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref angleVelocity, angularSmoothTime, angularMaxSpeed);
+        ////
         Quaternion currentRotation = Quaternion.Euler(0f, currentAngle, 0f);
-
-        handleCamera.transform.position = targetCenter;
+        ////Height
+        float targetHeight = target.transform.position.y + height;
+        float currentHeight = handleCamera.transform.position.y;
+        currentHeight = Mathf.SmoothDamp(currentHeight, targetHeight, ref heightVelocity, heightSmoothTime);
+        handleCamera.transform.position = new Vector3(target.transform.position.x, currentHeight, target.transform.position.z);
         handleCamera.transform.position += currentRotation * Vector3.back * distance;
+        ////
+    }
 
-        handleCamera.transform.position = new Vector3(handleCamera.transform.position.x, currentHeight, handleCamera.transform.position.z);
-
+    void Update()
+    {
+        //handleCamera.transform.eulerAngles = new Vector3(handleCamera.transform.eulerAngles.x, angle, handleCamera.transform.eulerAngles.z);
+        //ApplyCamera(transform);
 
     }
 
-    void LateUpdate()
+    public float GetCameraAngle()
     {
-        ApplyCamera(transform, Vector3.zero);
+        return angle;
     }
 
-    void Cut(Transform target,Vector3 center)
+    public float SetCameraAngle(float degree)
     {
-        float oldHeightSmooth = heightSmoothLag;
-        float oldSnapMaxSpeed = snapMaxSpeed;
-        float oldsnapSmoothLag = snapSmoothLag;
-
-        snapMaxSpeed = 10000f;
-        snapSmoothLag = 0.001f;
-        heightSmoothLag = 0.001f;
-
-        snap = true;
-        ApplyCamera(transform, Vector3.zero);
-
-        heightSmoothLag = oldHeightSmooth;
-        snapMaxSpeed = oldSnapMaxSpeed;
-        snapSmoothLag = oldSnapMaxSpeed;
+        angle = degree;
+        return angle;
     }
 
-    void SetUpRotation(Vector3 center,Vector3 head)
+    public float GetCameraHeight()
     {
-        Vector3 cameraPosition = handleCamera.transform.position;
-        Vector3 offsetToCenter = center - cameraPosition;
+        return height;
+    }
+
+    public float SetCameraHeight(float unit)
+    {
+        height = unit;
+        return height;
+    }
+
+    void LookAt(Transform target)
+    {
+        Vector3 offsetToCenter = target.position - handleCamera.transform.position;
 
         Quaternion yRotation = Quaternion.LookRotation(new Vector3(offsetToCenter.x, 0, offsetToCenter.z));
 
@@ -118,9 +111,9 @@ public class CameraModule : MonoBehaviour
 
         float centerToTopAngle = Vector3.Angle(centerRay.direction, topRay.direction);
         float heightToAngle = centerToTopAngle / (centerRayPosition.y - topRayPosition.y);
-        float extraLookAngle = heightToAngle * (centerRayPosition.y - center.y);
+        float extraLookAngle = heightToAngle * (centerRayPosition.y - target.position.y);
 
-        if(extraLookAngle<centerToTopAngle)
+        if (extraLookAngle < centerToTopAngle)
         {
             extraLookAngle = 0f;
         }
@@ -129,10 +122,5 @@ public class CameraModule : MonoBehaviour
             extraLookAngle = extraLookAngle - centerToTopAngle;
             handleCamera.transform.rotation *= Quaternion.Euler(-extraLookAngle, 0, 0);
         }
-    }
-
-    Vector3 GetCenterOffset()
-    {
-        return centerOffset;
     }
 }
